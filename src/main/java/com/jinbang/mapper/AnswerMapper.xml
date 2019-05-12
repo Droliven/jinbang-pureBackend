@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinbang.mapper.AnswerMapper">
+    <delete id="deleteAnswerById">
+        delete from answer where asrid=#{asrid};
+    </delete>
+    <update id="updateAnswerById" parameterType="com.jinbang.model.Answer">
+        update answer set content=#{content} where asrid=#{asrid};
+    </update>
+    <insert id="addAnswer" parameterType="com.jinbang.model.Answer">
+        insert into answer values(#{asrid}, #{content});
+    </insert>
+    <select id="getAnswerById" resultType="com.jinbang.model.Answer">
+        select * from answer where asrid=#{asrid};
+    </select>
+    <select id="getAll" resultType="com.jinbang.model.Answer">
+        select * from answer;
+    </select>
+    <select id="getAnswersLikeContent" resultType="com.jinbang.model.Answer">
+        <bind name="pattern" value="'%' + content + '%'"/>
+        select * from answer where content like #{pattern};
+    </select>
+</mapper>

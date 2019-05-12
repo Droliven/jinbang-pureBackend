@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinbang.mapper.Item_kpMapper">
+    <update id="updateItem_kpByIidAndKpid" parameterType="com.jinbang.model.Item_kp">
+        update item_kp set degree=#{degree} where iid=#{iid} and kpid=#{kpid};
+    </update>
+    <insert id="addItem_kp" parameterType="com.jinbang.model.Item_kp">
+        insert into item_kp values(#{iid}, #{kpid}, #{degree});
+    </insert>
+    <delete id="deleteItem_kpByKpid">
+        delete from item_kp where kpid=#{kpid};
+    </delete>
+    <delete id="deleteItem_kpByIid">
+        delete from item_kp where iid=#{iid};
+    </delete>
+    <delete id="deleteItem_kpByKpidAndIid">
+        delete from item_kp where iid=#{iid} and kpid=#{kpid};
+    </delete>
+    <select id="getItem_kpByIid" resultType="com.jinbang.model.Item_kp">
+        select * from item_kp where iid=#{iid};
+    </select>
+</mapper>

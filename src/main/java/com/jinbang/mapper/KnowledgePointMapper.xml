@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinbang.mapper.KnowledgePointMapper">
+    <delete id="deleteKpById">
+        delete from knowledgepoint where kpid=#{kpid};
+    </delete>
+    <update id="updateKpById" parameterType="com.jinbang.model.Knowledgepoint">
+        update knowledgepoint set knowledgepoint=#{knowledgepoint}, prepoint=#{prepoint}, depth=#{depth} where kpid=#{kpid};
+    </update>
+    <insert id="addKnowledgePoint" parameterType="com.jinbang.model.Knowledgepoint">
+        insert into knowledgepoint values(#{kpid}, #{knowledgepoint}, #{prepoint}, #{depth});
+    </insert>
+    <select id="getKpById" resultType="com.jinbang.model.Knowledgepoint">
+        select * from knowledgepoint where kpid=#{kpid};
+    </select>
+    <select id="getAll" resultType="com.jinbang.model.Knowledgepoint">
+        select * from knowledgepoint;
+    </select>
+    <select id="getKpsLikeKp" resultType="com.jinbang.model.Knowledgepoint">
+        <bind name="pattern" value="'%' + kp + '%'"/>
+        select * from knowledgepoint where knowledgepoint like #{pattern};
+    </select>
+</mapper>

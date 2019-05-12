@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinbang.mapper.UserMapper">
+    <insert id="userReg" parameterType="com.jinbang.model.User">
+      insert into user(uid, name, pwd, authority) values(${uid}, #{name}, #{pwd}, #{authority});
+    </insert>
+    <update id="updateUserById" parameterType="com.jinbang.model.User">
+        update user set name=#{name}, pwd=#{pwd}, authority=#{authority} where uid=#{uid};
+    </update>
+    <delete id="deleteUserById">
+        delete from user where uid=#{uid};
+    </delete>
+    <select id="loadByUserName" resultType="com.jinbang.model.User">
+        select * from `user` where `name`=#{name};
+    </select>
+    <select id="getUserById" resultType="com.jinbang.model.User">
+        select * from user where uid=#{uid};
+    </select>
+    <select id="getAll" resultType="com.jinbang.model.User">
+        select * from user;
+    </select>
+    <select id="getNames" resultType="java.lang.String">
+        select distinct name from user order by convert(name using gbk) asc;
+    </select>
+</mapper>

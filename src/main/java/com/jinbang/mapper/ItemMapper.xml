@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinbang.mapper.ItemMapper">
+    <delete id="deleteItemById">
+        delete from item where iid=#{iid};
+    </delete>
+    <update id="upgradeItemById" parameterType="com.jinbang.model.Item">
+        update item set type=#{type}, grade=#{grade}, source=#{source}, difficulty=#{difficulty}, uid=#{uid}, asrid=#{asrid}, content=#{content}
+        where iid=#{iid};
+    </update>
+    <insert id="addItem" parameterType="com.jinbang.model.Item">
+        insert into item values(#{iid}, #{type}, #{grade}, #{source}, #{difficulty}, #{uid}, #{asrid}, #{content});
+    </insert>
+    <select id="getItemById" resultType="com.jinbang.model.Item">
+        select * from item where iid=#{iid};
+    </select>
+    <select id="getAll" resultType="com.jinbang.model.Item">
+        select * from item;
+    </select>
+    <select id="getItemsByType" resultType="com.jinbang.model.Item">
+        select * from item where type=#{type};
+    </select>
+    <select id="getItemsByGrade" resultType="com.jinbang.model.Item">
+        select * from item where grade=#{grade};
+    </select>
+    <select id="getItemsBySource" resultType="com.jinbang.model.Item">
+        select * from item where source=#{source};
+    </select>
+    <select id="getItemsByUid" resultType="com.jinbang.model.Item">
+        select * from item where uid=#{uid};
+    </select>
+    <select id="getItemByAsrid" resultType="com.jinbang.model.Item">
+        select * from item where asrid=#{asrid};
+    </select>
+    <select id="getItemLikeContent" resultType="com.jinbang.model.Item">
+        <bind name="pattern" value="'%' + content + '%'" />
+        select * from item where content like #{pattern};
+    </select>
+    <select id="getTypes" resultType="java.lang.String">
+        select distinct type from item order by convert(type using gbk) asc;
+    </select>
+    <select id="getGrades" resultType="java.lang.String">
+        select distinct grade from item order by convert(grade using gbk) asc;
+    </select>
+    <select id="getSources" resultType="java.lang.String">
+        select distinct source from item order by convert(source using gbk) asc;
+    </select>
+    <select id="getItemsByGradeSourceTypeUid" resultType="com.jinbang.model.Item">
+            select * from item where iid is not null
+        <if test="type!= null" >
+            and type = #{type, jdbcType=VARCHAR}
+        </if>
+        <if test="grade!=null" >
+            and grade = #{grade, jdbcType=VARCHAR}
+        </if>
+        <if test="source!=null" >
+            and source = #{source, jdbcType=VARCHAR}
+        </if>
+        <if test="uid!=-1" >
+            and uid = #{uid, jdbcType=INTEGER}
+        </if>
+    </select>
+</mapper>

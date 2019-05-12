@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinbang.mapper.BuildpaperMapper">
+    <delete id="deleteBpByPid">
+        delete from buildpaper where pid=#{pid};
+    </delete>
+    <delete id="deleteBpByIid">
+        delete from buildpaper where iid=#{iid};
+    </delete>
+    <delete id="deleteBpByPidAndIid">
+        delete from buildpaper where pid=#{pid} and iid=#{iid};
+    </delete>
+    <update id="updateBpByPidAndIid" parameterType="com.jinbang.model.Buildpaper">
+        update buildpaper set itemorder=#{itemorder}, sumscore=#{sumscore}, sumtimemin=#{sumtimemin} where pid=#{pid} and iid=#{iid};
+    </update>
+    <insert id="addBuildpaper" parameterType="com.jinbang.model.Buildpaper">
+        insert into buildpaper values(#{pid}, #{iid}, #{itemorder}, {sumscore}, #{sumtimemin});
+    </insert>
+    <select id="getBpByPid" resultType="com.jinbang.model.Buildpaper">
+        select * from buildpaper where pid=#{pid};
+    </select>
+    <select id="getBpByIid" resultType="com.jinbang.model.Buildpaper">
+        select * from buildpaper where iid=#{iid};
+    </select>
+    <select id="getBpByPidAndIid" resultType="com.jinbang.model.Buildpaper">
+        select * from buildpaper where pid=#{pid} and iid=#{iid};
+    </select>
+</mapper>

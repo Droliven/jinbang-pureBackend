@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinbang.mapper.PaperMapper">
+    <delete id="deletePaperByPid">
+        delete from paper where pid=#{pid};
+    </delete>
+    <update id="updatePaperByPid" parameterType="com.jinbang.model.Paper">
+        update paper set title=#{title}, uid=#{uid}, sumscore=#{sumscore}, sumtimemin=#{sumtimemin} where pid=#{pid};
+    </update>
+    <insert id="addPaper" parameterType="com.jinbang.model.Paper">
+        insert into paper values(#{pid}, #{title},  #{uid},  #{sumscore},  #{sumtimemin});
+    </insert>
+    <select id="getPaperById" resultType="com.jinbang.model.Paper">
+        select * from paper where pid=#{pid};
+    </select>
+    <select id="getAll" resultType="com.jinbang.model.Paper">
+        select * from paper;
+    </select>
+    <select id="getPaperByUid" resultType="com.jinbang.model.Paper">
+        select * from paper where uid=#{uid};
+    </select>
+    <select id="getPaperLikeTitle" resultType="com.jinbang.model.Paper">
+        <bind name="pattern" value="'%' + title+ '%'"/>
+        select * from paper where title like #{pattern};
+    </select>
+</mapper>
