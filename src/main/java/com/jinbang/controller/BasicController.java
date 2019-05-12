@@ -44,7 +44,7 @@ public class BasicController {
                 // 写入 session
                 session.setAttribute("name", name);
             } else {
-                System.out.println("密码错误");
+//                System.out.println("密码错误");
                 map.put("err", "Wrong pwd!");
                 return new ResponseEntity<Map<String,Object>>(map, HttpStatus.BAD_REQUEST);
             }
@@ -61,7 +61,7 @@ public class BasicController {
         Map<String, Object> map = new HashMap<String, Object>();
         // 取出 session 中的 name
         Object name = session.getAttribute("name");
-        System.out.println(name.toString() + "注销！");
+//        System.out.println(name.toString() + "注销！");
         session.removeAttribute("name");
         map.put("success", "Logged out!");
         return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);

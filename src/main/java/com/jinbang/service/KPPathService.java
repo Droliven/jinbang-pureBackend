@@ -29,9 +29,5 @@ public class KPPathService {
             return path;
         }
     }
-//    public List<?> getPaths(){
-//        List<?> paths = new ArrayList<>();
-//
-//        return paths;
-//    }
+
 }

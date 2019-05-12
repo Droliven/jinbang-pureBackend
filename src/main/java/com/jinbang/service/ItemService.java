@@ -25,39 +25,6 @@ public class ItemService {
     @Autowired
     KPPathService kpPathService;
 
-//    public int deleteItemById(int iid){
-//        return itemMapper.deleteItemById(iid);
-//    };
-//    public int upgradeItemById(Item item){
-//        return itemMapper.upgradeItemById(item);
-//    };
-//    public int addItem(Item item){
-//        return itemMapper.addItem(item);
-//    };
-//    public Item getItemById(int iid){
-//        return itemMapper.getItemById(iid);
-//    };
-//    public List<Item> getAll(){
-//        return itemMapper.getAll();
-//    };
-//    public List<Item> getItemsByType(String type){
-//        return itemMapper.getItemsByType(type);
-//    };
-//    public List<Item> getItemsByGrade(String grade){
-//        return itemMapper.getItemsByGrade(grade);
-//    };
-//    public List<Item> getItemsBySource(String source){
-//        return itemMapper.getItemsBySource(source);
-//    };
-//    public List<Item> getItemsByUid(int uid){
-//        return itemMapper.getItemsByUid(uid);
-//    };
-//    public Item getItemByAsrid(int asrid){
-//        return itemMapper.getItemByAsrid(asrid);
-//    };
-//    public List<Item> getItemLikeContent(String content){
-//        return itemMapper.getItemLikeContent(content);
-//    };
     public Item_Asr_Usr_IK_Kp getItem_Asr_Usr_IK_KpByIid(int iid){
         Item_Asr_Usr_IK_Kp item_asr_usr_ik_kp = new Item_Asr_Usr_IK_Kp();
         Item item = itemMapper.getItemById(iid);
