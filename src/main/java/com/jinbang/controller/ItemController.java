@@ -1,7 +1,7 @@
 package com.jinbang.controller;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.jinbang.mapper.ItemMapper;
+import com.jinbang.mapper.KnowledgePointMapper;
 import com.jinbang.mapper.UserMapper;
 import com.jinbang.model.Item;
 import com.jinbang.model.ItemTableJson;
@@ -34,6 +34,8 @@ public class ItemController {
     ItemMapper itemMapper;
     @Autowired
     UserMapper userMapper;
+    @Autowired
+    KnowledgePointMapper knowledgePointMapper;
 
     @GetMapping("/itemall")
     public ResponseEntity<Map<String,Object>> itemall(HttpSession session) {

@@ -11,4 +11,7 @@ public interface KnowledgePointMapper {
     Knowledgepoint getKpById(int kpid);
     List<Knowledgepoint> getAll();
     List<Knowledgepoint> getKpsLikeKp(String kp);
+    List<Knowledgepoint> getKpsByDepth(int depth);
+    int getMaxDepth();
+    List<Knowledgepoint> getKpsByPreId(int preId);
 }

@@ -1,5 +1,6 @@
 package com.jinbang.service;
 
+import com.alibaba.fastjson.JSONArray;
 import com.jinbang.mapper.*;
 import com.jinbang.model.*;
 import org.apache.ibatis.annotations.Param;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ItemService {
@@ -71,10 +73,12 @@ public class ItemService {
         HashMap hashMap2 = new HashMap();
         HashMap hashMap3 = new HashMap();
         HashMap hashMap4 = new HashMap();
+        HashMap hashMap5 = new HashMap();
         List<String> types = itemMapper.getTypes();
         List<String> sources = itemMapper.getSources();
         List<String> grades = itemMapper.getGrades();
         List<String> names = userMapper.getNames();
+        JSONArray paths = kpPathService.getAllPaths();
         hashMap.put("types", types);
         results.add(hashMap);
         hashMap2.put("sources", sources);
@@ -83,6 +87,8 @@ public class ItemService {
         results.add(hashMap3);
         hashMap4.put("names", names);
         results.add(hashMap4);
+        hashMap5.put("paths", paths);
+        results.add(hashMap5);
         return results;
     }
     public List<Item_Asr_Usr_IK_Kp> itemchoose(String type, String grade, String source, String name){
@@ -103,5 +109,9 @@ public class ItemService {
             item_asr_usr_ik_kps.add(this.getItem_Asr_Usr_IK_KpByIid(iid));
         }
         return item_asr_usr_ik_kps;
+    }
+    public List<String> kPPath(){
+        List<String> kPPath = new ArrayList<String>();
+        return kPPath;
     }
 }

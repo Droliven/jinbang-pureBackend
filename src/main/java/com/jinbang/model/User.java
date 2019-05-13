@@ -1,11 +1,11 @@
 package com.jinbang.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.alibaba.fastjson.annotation.JSONField;
 
 public class User {
     private int uid;
     private String name;
-    @JsonIgnore
+    @JSONField(serialize=false)
     private String pwd;
     private String authority;
 

@@ -20,4 +20,13 @@
         <bind name="pattern" value="'%' + kp + '%'"/>
         select * from knowledgepoint where knowledgepoint like #{pattern};
     </select>
+    <select id="getMaxDepth">
+        select max(depth) from knowledgepoint;
+    </select>
+    <select id="getKpsByDepth" resultType="com.jinbang.model.Knowledgepoint">
+        select * from knowledgepoint where depth=#{depth};
+    </select>
+    <select id="getKpsByPreId" resultType="com.jinbang.model.Knowledgepoint">
+        select * from knowledgepoint where prepoint=#{preId};
+    </select>
 </mapper>
