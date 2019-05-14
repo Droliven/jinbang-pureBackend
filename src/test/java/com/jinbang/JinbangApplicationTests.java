@@ -116,39 +116,22 @@ public class JinbangApplicationTests {
 //            e.printStackTrace();
 //        }
 //    }
-    private void getAllPathsHelp(JSONArray fullJson, String fatherPath, int fatherId){
-    JSONArray jsonArray = new JSONArray();
-    List<Knowledgepoint> knowledgepoints = knowledgePointMapper.getKpsByPreId(fatherId);
-    if(knowledgepoints != null){
-        for(int i = 0; i < knowledgepoints.size(); i++){
-            Knowledgepoint knowledgepoint = knowledgepoints.get(i);
-            int id = knowledgepoint.getKpid();
-            String kp = knowledgepoint.getKnowledgepoint();
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put(kp, new JSONArray());
-            String path = fatherPath + "[" + i + "]." + kp;
-            jsonArray.add(jsonObject);
-            Boolean flag = JSONPath.set(fullJson, fatherPath, jsonArray);
-            getAllPathsHelp(fullJson, path, id);
-        }
-    }
-}
-    @Test
-    public void getAllPaths() {
-        JSONArray jsonArray = new JSONArray();
-        List<Knowledgepoint> knowledgepoints = knowledgePointMapper.getKpsByDepth(1);
-        if(knowledgepoints != null){
-            for(int i = 0; i < knowledgepoints.size(); i++){
-                Knowledgepoint knowledgepoint = knowledgepoints.get(i);
-                String kp = knowledgepoint.getKnowledgepoint();
-                int id = knowledgepoint.getKpid();
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put(kp, new JSONArray());
-                String path = "$[" + i + "]." + kp;
-                jsonArray.add(jsonObject);
-                getAllPathsHelp(jsonArray, path, id);
-            }
-        }
-        System.out.println(jsonArray.toString());
-    }
+//    private void getAllPathsHelp(JSONArray fullJson, String fatherPath, int fatherId){
+//    JSONArray jsonArray = new JSONArray();
+//    List<Knowledgepoint> knowledgepoints = knowledgePointMapper.getKpsByPreId(fatherId);
+//    if(knowledgepoints != null){
+//        for(int i = 0; i < knowledgepoints.size(); i++){
+//            Knowledgepoint knowledgepoint = knowledgepoints.get(i);
+//            int id = knowledgepoint.getKpid();
+//            String kp = knowledgepoint.getKnowledgepoint();
+//            JSONObject jsonObject = new JSONObject();
+//            jsonObject.put(kp, new JSONArray());
+//            String path = fatherPath + "[" + i + "]." + kp;
+//            jsonArray.add(jsonObject);
+//            Boolean flag = JSONPath.set(fullJson, fatherPath, jsonArray);
+//            getAllPathsHelp(fullJson, path, id);
+//        }
+//    }
+//}
+//
 }

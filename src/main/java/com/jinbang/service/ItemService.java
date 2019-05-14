@@ -1,16 +1,15 @@
 package com.jinbang.service;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.jinbang.mapper.*;
 import com.jinbang.model.*;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class ItemService {
@@ -26,8 +25,10 @@ public class ItemService {
     KnowledgePointMapper knowledgePointMapper;
     @Autowired
     KPPathService kpPathService;
+    @Autowired
+    BuildpaperMapper buildpaperMapper;
 
-    public Item_Asr_Usr_IK_Kp getItem_Asr_Usr_IK_KpByIid(int iid){
+    private Item_Asr_Usr_IK_Kp getItem_Asr_Usr_IK_KpByIid(int iid){
         Item_Asr_Usr_IK_Kp item_asr_usr_ik_kp = new Item_Asr_Usr_IK_Kp();
         Item item = itemMapper.getItemById(iid);
         User user = userMapper.getUserById(item.getUid());
@@ -110,8 +111,23 @@ public class ItemService {
         }
         return item_asr_usr_ik_kps;
     }
-    public List<String> kPPath(){
-        List<String> kPPath = new ArrayList<String>();
-        return kPPath;
+    public JSONObject itemDeleteByIids(JSONArray iidsJson){
+        List<Integer> iids = new ArrayList<>();
+        for(int i=0; i < iidsJson.size(); i++){
+            iids.add(iidsJson.getInteger(i));
+        }
+//        System.out.println("service: " + iids.toString());
+        JSONObject deleteResult = new JSONObject();
+        for (int iid : iids){
+            Item item = itemMapper.getItemById(iid);
+            if(item != null){
+                int asrId = itemMapper.getItemById(iid).getAsrid();
+                deleteResult.put("Affected buildpaper rows", buildpaperMapper.deleteBpByIid(iid));
+                deleteResult.put("Affected item_kp rows", item_kpMapper.deleteItem_kpByIid(iid));
+                deleteResult.put("Affected item rows", itemMapper.deleteItemById(iid));
+                deleteResult.put("Affected answer rows",answerMapper.deleteAnswerById(asrId));
+            }
+        }
+        return deleteResult;
     }
 }

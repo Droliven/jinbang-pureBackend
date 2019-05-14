@@ -1,13 +1,16 @@
 package com.jinbang.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.jinbang.mapper.ItemMapper;
 import com.jinbang.mapper.KnowledgePointMapper;
 import com.jinbang.mapper.UserMapper;
-import com.jinbang.model.Item;
-import com.jinbang.model.ItemTableJson;
 import com.jinbang.model.Item_Asr_Usr_IK_Kp;
 import com.jinbang.service.ItemService;
-import javafx.beans.binding.ObjectExpression;
+import com.sun.net.httpserver.HttpsParameters;
+import jdk.nashorn.internal.ir.Symbol;
+import org.apache.ibatis.annotations.Param;
 import org.omg.CORBA.PUBLIC_MEMBER;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,10 +18,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,5 +80,52 @@ public class ItemController {
             map.put("err", "Not Logged!");
             return new ResponseEntity<Map<String,Object>>(map, HttpStatus.BAD_REQUEST);
         }
+    }
+//    @DeleteMapping ("/itemDeleteByIids")
+//    public ResponseEntity<JSONObject> itemDeleteByIids(HttpServletRequest request, HttpSession session){
+//        if(session.getAttribute("name")!=null){
+//            JSONArray jsonArray = JSON.parseArray(request.getParameter("iids").toString());
+//            JSONObject jsonObject = itemService.itemDeleteByIids(jsonArray);
+//            return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.OK);
+//        } else {
+//            JSONObject jsonObject = new JSONObject();
+//            jsonObject.put("err", "Not Logged!");
+//            return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.BAD_REQUEST);
+//        }
+//    }
+//    @DeleteMapping ("/itemDeleteByIids")
+//    public JSONObject itemDeleteByIids(HttpServletRequest request){
+//        JSONObject jsonParam = null;
+//        try {
+//            // 获取输入流
+//            BufferedReader streamReader = new BufferedReader(new InputStreamReader(request.getInputStream(), "UTF-8"));
+//            // 写入数据到Stringbuilder
+//            StringBuilder sb = new StringBuilder();
+//            String line = null;
+//            while ((line = streamReader.readLine()) != null) {
+//                sb.append(line);
+//            }
+//            jsonParam = JSONObject.parseObject(sb.toString());
+//            // 直接将json信息打印出来
+//            System.out.println(jsonParam.toJSONString());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return jsonParam;
+//    }
+    @DeleteMapping ("/itemDeleteByIids")
+    public ResponseEntity<JSONObject> itemDeleteByIids(@RequestBody JSONObject jsonParam, HttpSession session){
+        if(session.getAttribute("name")!=null){
+            // 直接将json信息打印出来
+            JSONArray jsonArray = JSON.parseArray(jsonParam.get("iids").toString());
+//            System.out.println(jsonArray.toString());
+            JSONObject jsonObject = itemService.itemDeleteByIids(jsonArray);
+            return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.OK);
+        } else {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("err", "Not Logged!");
+            return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.BAD_REQUEST);
+        }
+
     }
 }

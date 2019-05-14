@@ -6,7 +6,6 @@ import com.alibaba.fastjson.JSONPath;
 import com.jinbang.mapper.KnowledgePointMapper;
 import com.jinbang.model.Knowledgepoint;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.jsonb.JsonbAutoConfiguration;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
