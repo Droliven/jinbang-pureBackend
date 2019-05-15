@@ -15,7 +15,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
+@CrossOrigin(origins = "*",
+        maxAge = 3600,
+        methods = {RequestMethod.GET})
 @RestController
 public class BasicController {
     @Autowired
@@ -53,7 +55,7 @@ public class BasicController {
             map.put("err", "Name not exists!");
             return new ResponseEntity<Map<String,Object>>(map, HttpStatus.BAD_REQUEST);
         }
-        map.put("seccess", "Login successful!");
+        map.put("success", "Login successful!");
         return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
     }
     @RequestMapping("/signout")

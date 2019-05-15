@@ -1,7 +1,9 @@
 package com.jinbang.service;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSONPath;
 import com.jinbang.mapper.*;
 import com.jinbang.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,7 +81,7 @@ public class ItemService {
         List<String> sources = itemMapper.getSources();
         List<String> grades = itemMapper.getGrades();
         List<String> names = userMapper.getNames();
-        JSONArray paths = kpPathService.getAllPaths();
+        JSONArray paths = kpPathService.getRestBranch("");
         hashMap.put("types", types);
         results.add(hashMap);
         hashMap2.put("sources", sources);
@@ -111,6 +113,7 @@ public class ItemService {
         }
         return item_asr_usr_ik_kps;
     }
+
     public JSONObject itemDeleteByIids(JSONArray iidsJson){
         List<Integer> iids = new ArrayList<>();
         for(int i=0; i < iidsJson.size(); i++){
@@ -129,5 +132,21 @@ public class ItemService {
             }
         }
         return deleteResult;
+    }
+
+    public JSONObject updateItem_Asr_Usr_IK_Kp(JSONObject item_Asr_Usr_IK_Kp){
+        // 暂时不能修改题目涉及的知识点，也不能新增知识点
+        JSONObject itemJson = JSON.parseObject(JSONPath.eval(item_Asr_Usr_IK_Kp, "$.item").toString());
+        Item item = (Item) JSONObject.toJavaObject(itemJson, Item.class);
+        JSONObject asrJson = JSON.parseObject(JSONPath.eval(item_Asr_Usr_IK_Kp, "$.answer").toString());
+        Answer answer = (Answer) JSONObject.toJavaObject(asrJson, Answer.class);
+
+        int rsltItem = itemMapper.upgradeItemById(item);
+        int reltAnswer = answerMapper.updateAnswerById(answer);
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("Affected item rows", rsltItem);
+        jsonObject.put("Affected answer rows", reltAnswer);
+        return jsonObject;
     }
 }

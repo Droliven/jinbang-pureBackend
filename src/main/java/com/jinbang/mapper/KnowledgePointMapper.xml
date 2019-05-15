@@ -29,4 +29,13 @@
     <select id="getKpsByPreId" resultType="com.jinbang.model.Knowledgepoint">
         select * from knowledgepoint where prepoint=#{preId};
     </select>
+    <select id="getKpByKp" resultType="com.jinbang.model.Knowledgepoint">
+        select * from knowledgepoint where knowledgepoint=#{kp};
+    </select>
+    <select id="countAll">
+        select count(*) from knowledgepoint;
+    </select>
+    <select id="maxKpid">
+        select max(kpid) from knowledgepoint;
+    </select>
 </mapper>

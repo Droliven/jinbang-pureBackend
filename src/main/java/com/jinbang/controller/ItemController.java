@@ -8,6 +8,7 @@ import com.jinbang.mapper.KnowledgePointMapper;
 import com.jinbang.mapper.UserMapper;
 import com.jinbang.model.Item_Asr_Usr_IK_Kp;
 import com.jinbang.service.ItemService;
+import com.jinbang.service.KPPathService;
 import com.sun.net.httpserver.HttpsParameters;
 import jdk.nashorn.internal.ir.Symbol;
 import org.apache.ibatis.annotations.Param;
@@ -38,6 +39,8 @@ public class ItemController {
     UserMapper userMapper;
     @Autowired
     KnowledgePointMapper knowledgePointMapper;
+    @Autowired
+    KPPathService kpPathService;
 
     @GetMapping("/itemall")
     public ResponseEntity<Map<String,Object>> itemall(HttpSession session) {
@@ -126,6 +129,30 @@ public class ItemController {
             jsonObject.put("err", "Not Logged!");
             return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.BAD_REQUEST);
         }
+    }
 
+    @RequestMapping("/getRestBranch")
+    public ResponseEntity<JSONArray> getRestBranch(HttpServletRequest request, HttpSession session){
+        if(session.getAttribute("name")!=null){
+            String node = request.getParameter("node");
+            JSONArray jsonArray = kpPathService.getRestBranch(node);
+            return new ResponseEntity<JSONArray>(jsonArray, HttpStatus.OK);
+        } else {
+            JSONArray jsonArray = new JSONArray();
+            jsonArray.add("Not Logged!");
+            return new ResponseEntity<JSONArray>(jsonArray, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping ("/editItemFully")
+    public ResponseEntity<JSONObject> editItemFully(@RequestBody JSONObject jsonParam, HttpSession session){
+        if(session.getAttribute("name")!=null){
+            JSONObject jsonObject = itemService.updateItem_Asr_Usr_IK_Kp(jsonParam);
+            return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.OK);
+        } else {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("err", "Not Logged!");
+            return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.BAD_REQUEST);
+        }
     }
 }
