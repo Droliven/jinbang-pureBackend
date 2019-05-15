@@ -2,9 +2,7 @@ package com.jinbang;
 
 
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlCreateUserStatement;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.JSONPath;
+import com.alibaba.fastjson.*;
 import com.jinbang.mapper.ItemMapper;
 import com.jinbang.mapper.KnowledgePointMapper;
 import com.jinbang.mapper.UserMapper;
@@ -22,10 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -43,6 +38,8 @@ public class JinbangApplicationTests {
     ItemMapper itemMapper;
     @Autowired
     KnowledgePointMapper knowledgePointMapper;
+    @Autowired
+    KPPathService kpPathService;
 
     @Test
     public void UserTest(){
@@ -133,5 +130,11 @@ public class JinbangApplicationTests {
 //        }
 //    }
 //}
-//
+//    @Test
+//    public void testaddKpByPath(){
+//        System.out.println(kpPathService.getRestBranch("").toString());
+//        kpPathService.addKpByPath("数学/统计学/正态分布");
+//        System.out.println(kpPathService.getRestBranch("").toString());
+//    }
+
 }

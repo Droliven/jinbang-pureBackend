@@ -1,23 +1,52 @@
 package com.jinbang.service;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.JSONPath;
+import com.alibaba.fastjson.*;
 import com.jinbang.mapper.KnowledgePointMapper;
 import com.jinbang.model.Knowledgepoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class KPPathService {
     @Autowired
     KnowledgePointMapper knowledgePointMapper;
+
+    // 获取本项目中的这种特定树结构下的所有 key, 不具推广性
+    private void getAllKeys(String jsonArrayString, Set<String> keySet) {
+        List<Map<String, Object>> listMap = JSON.parseObject(jsonArrayString, new TypeReference<List<Map<String,Object>>>(){});
+        for(int i=0; i < listMap.size(); i++){
+            // 处理 JSONObject 元素
+            String elemKey = listMap.get(i).keySet().toString();
+//            System.out.println("key " + elemKey);
+            if(elemKey.length() > 2){
+                String key = elemKey.substring(1, elemKey.length()-1);
+                keySet.add(key);
+//                System.out.println("value " + listMap.get(i).get(key).toString());
+                getAllKeys(listMap.get(i).get(key).toString(), keySet);
+            }
+        }
+    }
+
+    private boolean isAncestor(String node1, String node2) {
+        // 判断 node1 是否是 node2 的祖先
+        if(node1.equals(node2)) {
+            return false;
+        } else if(knowledgePointMapper.getKpByKp(node1) == null || knowledgePointMapper.getKpByKp(node2) == null) {
+            return false;
+        } else {
+            JSONArray jsonOfNode1 = getRestBranch(node1);
+            Set<String> keySetOfNode1 = new HashSet<String>();
+            getAllKeys(jsonOfNode1.toString(), keySetOfNode1);
+            if(keySetOfNode1.contains(node2)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
 
     public String getKPPathByKpid(int kpid) {
         String path = "";
@@ -79,71 +108,44 @@ public class KPPathService {
         return jsonArray;
     }
 
-//    public JSONObject addKpByByPath(String path){
-//        int maxKpid = knowledgePointMapper.maxKpid();
-//        // 开始切割为结点
-//        String [] nodes = path.split("/");
-//        for(int i=0; i<nodes.length; i++) {
-//            Knowledgepoint knowledgepoint = knowledgePointMapper.getKpByKp(nodes[i]);
-//            if(knowledgepoint == null) {
-//                if(i == 0) {
-//                    knowledgepoint.setKnowledgepoint(nodes[i]);
-//                    knowledgepoint.setPrepoint(-1);
-//                    knowledgepoint.setKpid(maxKpid + 1);
-//                    knowledgepoint.setDepth(1);
-//                } else {
-//
-//                }
-//            }
-//        }
-//        Knowledgepoint knowledgepoint = new Knowledgepoint();
-//        if(knowledgePointMapper.getKpByKp(nodes[0]) == null){
-//            for(int i = 0; i < nodes.length; i++){
-//                if()
-//            }
-//        }
-//            knowledgepoint.setDepth(1);
-//            knowledgepoint.setPrepoint(-1);
-//            knowledgepoint.setKnowledgepoint(path);
-//        } else {
-//            int fatherId;
-//            int fatherDepth;
-//            String fatherNode;
-//            String childNode;
-//            for(int i=0; i < nodes.length - 1; i++){
-//                Knowledgepoint kp;
-//                fatherNode = nodes[i];
-//                childNode = nodes[i+1];
-//                kp = knowledgePointMapper.getKpByKp(fatherNode);
-//                if(kp == null){
-//
-//                }
-//
-//                knowledgepoint = knowledgePointMapper.getKpByKp(fatherNode);
-//
-//
-//            }
-//        }
-//
-//
-//        if(fatherPath.equals("")){
-//            knowledgepoint.setDepth(1);
-//            knowledgepoint.setPrepoint(-1);
-//        } else{
-//
-//            for(String node : nodes){
-//
-//            }
-//
-//            int prePoint = knowledgePointMapper.getKpByKp(nodes[nodes.length - 1]).getKpid();
-//            int depth = knowledgePointMapper.getKpByKp(nodes[nodes.length - 1]).getDepth() + 1;
-//            knowledgepoint.setDepth(depth);
-//            knowledgepoint.setPrepoint(prePoint);
-//        }
-//        knowledgepoint.setKpid(maxKpid + 1);
-//        knowledgepoint.setKnowledgepoint(branchKp);
-//        analyze = knowledgePointMapper.addKnowledgePoint(knowledgepoint);
-//        result.put("Affected knowledgepoint rows", analyze);
-//        return result;
-//    }
+    public void addKpByPath(String path){
+        int res;
+        // 默认 path 不为空
+        int maxKpid;
+        // 开始切割为结点
+        String [] nodes = path.split("/");
+        // 逐个判断
+        Knowledgepoint newNode = new Knowledgepoint();
+        for(int i=0; i<nodes.length; i++) {
+            maxKpid = knowledgePointMapper.maxKpid();
+            Knowledgepoint kpSearch = knowledgePointMapper.getKpByKp(nodes[i]);
+            // 用户链条结点系统树中不存在
+            if(kpSearch == null) {
+                // 在用户链条中找父亲
+                if (i > 0) {
+                    String fatherName = nodes[i - 1];
+                    Knowledgepoint father = knowledgePointMapper.getKpByKp(fatherName);
+                    newNode.setDepth(father.getDepth() + 1);
+                    newNode.setPrepoint(father.getKpid());
+                } else {
+                    newNode.setDepth(1);
+                    newNode.setPrepoint(-1);
+                }
+                newNode.setKnowledgepoint(nodes[i]);
+                newNode.setKpid(maxKpid + 1);
+                res = knowledgePointMapper.addKnowledgePoint(newNode);
+            } else {
+                // 用户链条结点系统树中存在
+                if(i > 0) {
+                    String fatherInChain = knowledgePointMapper.getKpByKp(nodes[i-1]).getKnowledgepoint();
+                    String fatherInTree = knowledgePointMapper.getKpById(kpSearch.getPrepoint()).getKnowledgepoint();
+                    if(isAncestor(fatherInTree, fatherInChain)) {
+                        // 断链重连
+                        newNode.setPrepoint(knowledgePointMapper.getKpByKp(nodes[i-1]).getKpid());
+                        res = knowledgePointMapper.updateKpById(newNode);
+                    }
+                }
+            }
+        }
+    }
 }

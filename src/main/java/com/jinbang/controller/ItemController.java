@@ -155,4 +155,15 @@ public class ItemController {
             return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.BAD_REQUEST);
         }
     }
+    @PostMapping("/addKpByPath")
+    public ResponseEntity<String> addKpByPath(@RequestBody JSONObject jsonParam, HttpSession session) {
+        if(session.getAttribute("name")!=null){
+            String path = jsonParam.get("path").toString();
+            kpPathService.addKpByPath(path);
+            return new ResponseEntity<String>("Knowledgepoints Added!", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<String>("Not Logged!", HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }
