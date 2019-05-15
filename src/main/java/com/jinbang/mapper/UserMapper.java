@@ -1,6 +1,8 @@
 package com.jinbang.mapper;
 
 import com.jinbang.model.User;
+
+import java.lang.ref.SoftReference;
 import java.util.List;
 
 public interface UserMapper {
@@ -11,4 +13,6 @@ public interface UserMapper {
     User getUserById(int uid);
     List<User> getAll();
     List<String> getNames();
+    int maxUid();
+    int getUidByName(String name);
 }

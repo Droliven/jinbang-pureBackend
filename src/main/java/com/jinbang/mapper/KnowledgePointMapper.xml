@@ -38,4 +38,7 @@
     <select id="maxKpid" resultType="java.lang.Integer">
         select max(kpid) from knowledgepoint;
     </select>
+    <select id="getKpidByName" resultType="java.lang.Integer">
+        select kpid from knowledgepoint where knowledgepoint=#{kp};
+    </select>
 </mapper>

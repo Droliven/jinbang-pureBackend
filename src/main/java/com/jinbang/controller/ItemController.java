@@ -144,17 +144,6 @@ public class ItemController {
         }
     }
 
-    @PostMapping ("/editItemFully")
-    public ResponseEntity<JSONObject> editItemFully(@RequestBody JSONObject jsonParam, HttpSession session){
-        if(session.getAttribute("name")!=null){
-            JSONObject jsonObject = itemService.updateItem_Asr_Usr_IK_Kp(jsonParam);
-            return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.OK);
-        } else {
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("err", "Not Logged!");
-            return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.BAD_REQUEST);
-        }
-    }
     @PostMapping("/addKpByPath")
     public ResponseEntity<String> addKpByPath(@RequestBody JSONObject jsonParam, HttpSession session) {
         if(session.getAttribute("name")!=null){
@@ -166,4 +155,27 @@ public class ItemController {
         }
     }
 
+    @PostMapping ("/editItemFully")
+    public ResponseEntity<JSONObject> editItemFully(@RequestBody JSONObject jsonParam, HttpSession session){
+        if(session.getAttribute("name")!=null){
+            JSONObject jsonObject = itemService.editItemFully(jsonParam);
+            return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.OK);
+        } else {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("Err!", "Not Logged!");
+            return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/addItemFully")
+    public ResponseEntity<JSONObject> addItemFully(@RequestBody JSONObject jsonParam, HttpSession session){
+        if(session.getAttribute("name")!=null){
+            JSONObject jsonObject = itemService.addItemFully(jsonParam);
+            return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.OK);
+        } else {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("Err!", "Not Logged!");
+            return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.BAD_REQUEST);
+        }
+    }
 }

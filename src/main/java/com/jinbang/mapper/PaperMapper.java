@@ -12,4 +12,5 @@ public interface PaperMapper {
     List<Paper> getAll();
     List<Paper> getPaperByUid(int uid);
     List<Paper> getPaperLikeTitle(String title);
+    int maxPid();
 }

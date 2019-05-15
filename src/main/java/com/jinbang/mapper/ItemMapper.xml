@@ -60,4 +60,7 @@
             and uid = #{uid, jdbcType=INTEGER}
         </if>
     </select>
+    <select id="maxIid" resultType="java.lang.Integer">
+        select max(iid) from item;
+    </select>
 </mapper>

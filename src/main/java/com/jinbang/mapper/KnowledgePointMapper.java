@@ -17,4 +17,5 @@ public interface KnowledgePointMapper {
     List<Knowledgepoint> getKpsByPreId(int preId);
     int countAll();
     int maxKpid();
+    int getKpidByName(String kp);
 }

@@ -6,7 +6,6 @@ import com.jinbang.model.Knowledgepoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -30,8 +29,9 @@ public class KPPathService {
         }
     }
 
+    // 判断 node1 是否是 node2 的祖先
     private boolean isAncestor(String node1, String node2) {
-        // 判断 node1 是否是 node2 的祖先
+
         if(node1.equals(node2)) {
             return false;
         } else if(knowledgePointMapper.getKpByKp(node1) == null || knowledgePointMapper.getKpByKp(node2) == null) {
@@ -45,23 +45,6 @@ public class KPPathService {
             } else {
                 return false;
             }
-        }
-    }
-
-    public String getKPPathByKpid(int kpid) {
-        String path = "";
-        Knowledgepoint knowledgepoint = knowledgePointMapper.getKpById(kpid);
-        if (knowledgepoint.getPrepoint() == -1) {
-            return knowledgepoint.getKnowledgepoint();
-        } else {
-            path = knowledgepoint.getKnowledgepoint() + path;
-//            System.out.println(path);
-            while (knowledgepoint.getPrepoint() != -1) {
-                knowledgepoint = knowledgePointMapper.getKpById(knowledgepoint.getPrepoint());
-                path = knowledgepoint.getKnowledgepoint() + "/" + path;
-//                System.out.println(path);
-            }
-            return path;
         }
     }
 
@@ -83,8 +66,28 @@ public class KPPathService {
         }
     }
 
+    // 传入 结点 id 获取从本脉树根到该结点的路径
+    // 格式：path： "数学/线性代数/矩阵运算"
+    public String getKPPathByKpid(int kpid) {
+
+        String path = "";
+        Knowledgepoint knowledgepoint = knowledgePointMapper.getKpById(kpid);
+        if (knowledgepoint.getPrepoint() == -1) {
+            return knowledgepoint.getKnowledgepoint();
+        } else {
+            path = knowledgepoint.getKnowledgepoint() + path;
+//            System.out.println(path);
+            while (knowledgepoint.getPrepoint() != -1) {
+                knowledgepoint = knowledgePointMapper.getKpById(knowledgepoint.getPrepoint());
+                path = knowledgepoint.getKnowledgepoint() + "/" + path;
+//                System.out.println(path);
+            }
+            return path;
+        }
+    }
+
+    // 通过某一结点名来获取该结点下的子树，即剩余分支
     public JSONArray getRestBranch(String node){
-        // 通过某一结点名来获取该结点下的子树，即剩余分支
         JSONArray jsonArray = new JSONArray();
         List<Knowledgepoint> knowledgepoints;
         if(node.isEmpty()){
@@ -108,7 +111,10 @@ public class KPPathService {
         return jsonArray;
     }
 
+    // 参数格式：path： "数学/线性代数/矩阵运算"
+    // 在 knowledgepoint 表中新建知识点树杈
     public void addKpByPath(String path){
+
         int res;
         // 默认 path 不为空
         int maxKpid;

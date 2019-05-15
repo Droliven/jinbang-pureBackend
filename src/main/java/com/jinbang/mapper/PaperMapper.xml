@@ -23,4 +23,7 @@
         <bind name="pattern" value="'%' + title+ '%'"/>
         select * from paper where title like #{pattern};
     </select>
+    <select id="maxPid" resultType="java.lang.Integer">
+        select max(pid) from paper;
+    </select>
 </mapper>

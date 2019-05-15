@@ -20,4 +20,7 @@
         <bind name="pattern" value="'%' + content + '%'"/>
         select * from answer where content like #{pattern};
     </select>
+    <select id="maxAsrid" resultType="java.lang.Integer">
+        select max(asrid) from answer;
+    </select>
 </mapper>

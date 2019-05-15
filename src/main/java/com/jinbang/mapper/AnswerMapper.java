@@ -11,4 +11,5 @@ public interface AnswerMapper {
     Answer getAnswerById(int asrid);
     List<Answer> getAll();
     List<Answer> getAnswersLikeContent(String content);
+    int maxAsrid();
 }

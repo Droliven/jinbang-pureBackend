@@ -7,8 +7,6 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 public interface ItemMapper {
-    // 一对一联系
-
     int deleteItemById(int iid);
     int upgradeItemById(Item item);
     int addItem(Item item);
@@ -24,4 +22,5 @@ public interface ItemMapper {
     List<String> getSources();
     List<String> getGrades();
     List<Item> getItemsByGradeSourceTypeUid(String type, String grade, String source, int uid);
+    int maxIid();
 }
