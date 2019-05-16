@@ -3,9 +3,11 @@ package com.jinbang;
 
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlCreateUserStatement;
 import com.alibaba.fastjson.*;
+import com.jinbang.mapper.AnswerMapper;
 import com.jinbang.mapper.ItemMapper;
 import com.jinbang.mapper.KnowledgePointMapper;
 import com.jinbang.mapper.UserMapper;
+import com.jinbang.model.Item;
 import com.jinbang.model.Item_Asr_Usr_IK_Kp;
 import com.jinbang.model.Knowledgepoint;
 import com.jinbang.model.User;
@@ -40,6 +42,8 @@ public class JinbangApplicationTests {
     KnowledgePointMapper knowledgePointMapper;
     @Autowired
     KPPathService kpPathService;
+    @Autowired
+    AnswerMapper answerMapper;
 
     @Test
     public void UserTest(){
@@ -49,21 +53,11 @@ public class JinbangApplicationTests {
         System.out.println(userMapper.getAll());
     }
 
-//    @Test
-//    public void ItemTest(){
-//        Item item = new Item();
-//        item.setAsrid(4);
-//        item.setContent("5+8=____.");
-//        item.setDifficulty(5);
-//        item.setGrade("小学一年级");
-//        item.setUid(2);
-//        item.setIid(4);
-//        item.setSource("自编");
-//        item.setType("填空");
-//
-//        System.out.println(itemService.addItem(item));
-//        System.out.println(itemService.getItemLikeContent("小朋友"));
-//    }
+    @Test
+    public void LikeTest(){
+        System.out.println(answerMapper.getAnswersLikeContent("By the time"));
+//        System.out.println(itemMapper.getItemLikeContent("等这条"));
+    }
 //    @Test
 //    public void testBcrypt(){
 //        // Hash a password for the first time
@@ -136,5 +130,4 @@ public class JinbangApplicationTests {
 //        kpPathService.addKpByPath("数学/统计学/正态分布");
 //        System.out.println(kpPathService.getRestBranch("").toString());
 //    }
-
 }

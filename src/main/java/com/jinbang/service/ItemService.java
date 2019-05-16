@@ -1,9 +1,6 @@
 package com.jinbang.service;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.JSONPath;
+import com.alibaba.fastjson.*;
 import com.jinbang.mapper.*;
 import com.jinbang.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ItemService {
@@ -135,7 +133,7 @@ public class ItemService {
     }
 
     // 深度更新题目
-    public JSONObject editItemFully(JSONObject oldAndNewItem_Asr_Usr_IK_Kp){
+    public void editItemFully(JSONObject oldAndNewItem_Asr_Usr_IK_Kp){
         // 需要注意的是，本函数是在修改 题目，答案，关联的知识点 id, 并不真正修改 knowledgepoint, 以及 path
         // 对 knowledgepoint, 以及 path 的修改是在 用户点击 多级下拉框选择的时候编辑的
         // 由于 kp 可能发生 断链重连，所以旧的 kpid 不可信，只有 kp 才是可信的，所以需要前端传入旧的 kp
@@ -146,24 +144,38 @@ public class ItemService {
         asrid = (int) JSONPath.eval(oldAndNewItem_Asr_Usr_IK_Kp, "$.old.answer.asrid");
         uid = (int) JSONPath.eval(oldAndNewItem_Asr_Usr_IK_Kp, "$.old.user.uid");
         // kp 可能发生 断链重连，所以旧的 kpid 不可信，只有 kp 才是可信的
-        String oldKpStr = JSONPath.eval(oldAndNewItem_Asr_Usr_IK_Kp, "$.old.knowledgepoint.knowledgepoint").toString();
-        String newKpStr = JSONPath.eval(oldAndNewItem_Asr_Usr_IK_Kp, "$.new.knowledgepoint.knowledgepoint").toString();
-        if(!oldKpStr.equals(newKpStr)){
+        String oldKpListStr = JSONPath.eval(oldAndNewItem_Asr_Usr_IK_Kp, "$.old.knowledgepoints").toString();
+        List<Map<String, Object>> oldKpList = JSON.parseObject(oldKpListStr, new TypeReference<List<Map<String,Object>>>(){});
+
+        String newKpListStr = JSONPath.eval(oldAndNewItem_Asr_Usr_IK_Kp, "$.new.knowledgepoints").toString();
+        List<Map<String, Object>> newKpList = JSON.parseObject(newKpListStr, new TypeReference<List<Map<String,Object>>>(){});
+
+        List<String> oldKpStrs = new ArrayList<>();
+        List<String> newKpStrs = new ArrayList<>();
+
+        for(Map<String, Object> oldKp: oldKpList){
+            oldKpStrs.add(oldKp.get("knowledgepoint").toString());
+        }
+        for(Map<String, Object> newKp: newKpList){
+            newKpStrs.add(newKp.get("knowledgepoint").toString());
+        }
+        // 不论相等与否，统一删旧插新
+        for(String oldKpStr: oldKpStrs){
             Knowledgepoint oldKp = knowledgePointMapper.getKpByKp(oldKpStr);
             oldKp = knowledgePointMapper.getKpByKp(oldKpStr);
             oldKpid = oldKp.getKpid();
-            Knowledgepoint newKp = knowledgePointMapper.getKpByKp(newKpStr);
-            newKpid = newKp.getKpid();
             // 先 删除旧的 item_kp
             int rslt = item_kpMapper.deleteItem_kpByKpidAndIid(oldKpid, iid);
+        }
+        for(String newKpStr: newKpStrs){
+            Knowledgepoint newKp = knowledgePointMapper.getKpByKp(newKpStr);
+            newKpid = newKp.getKpid();
             // 再插入新的 item_kp
             Item_kp item_kp = new Item_kp();
             item_kp.setDegree(5);
             item_kp.setKpid(newKpid);
             item_kp.setIid(iid);
-            rslt = item_kpMapper.addItem_kp(item_kp);
-            // 再 check kpid
-            JSONPath.set(oldAndNewItem_Asr_Usr_IK_Kp, "$.new.item.kpid", newKpid);
+            int rslt = item_kpMapper.addItem_kp(item_kp);
         }
         JSONPath.set(oldAndNewItem_Asr_Usr_IK_Kp, "$.new.item.iid", iid);
         JSONPath.set(oldAndNewItem_Asr_Usr_IK_Kp, "$.new.item.asrid", asrid);
@@ -174,53 +186,59 @@ public class ItemService {
         Item item = (Item) JSONObject.toJavaObject(itemJson, Item.class);
         JSONObject asrJson = JSON.parseObject(JSONPath.eval(oldAndNewItem_Asr_Usr_IK_Kp, "$.new.answer").toString());
         Answer answer = (Answer) JSONObject.toJavaObject(asrJson, Answer.class);
-
         // 答案 asrId 不会变
         int reltAnswer = answerMapper.updateAnswerById(answer);
         // 题目 iid 不会变
         int rsltItem = itemMapper.upgradeItemById(item);
-
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("Success!", "Edit fully!");
-        return jsonObject;
     }
 
-    // 新建题目
-    public JSONObject addItemFully(JSONObject item_Asr_Usr_IK_Kp){
-        // 需要注意的是，本函数是在增肌 题目，答案，关联的知识点 id, 并不真正修改 knowledgepoint, 以及 path
+    // 新建题目，并查重
+    public void addItemFully(JSONObject item_Asr_Usr_IK_Kp){
+        // 需要注意的是，本函数是在增加 题目，答案，关联的知识点 id, 并不真正修改 knowledgepoint, 以及 path
         // 对 knowledgepoint, 以及 path 的修改是在 用户点击 多级下拉框选择的时候编辑的
 
+        // 如何查重：主要判断 iContent
+        String iContent = JSONPath.eval(item_Asr_Usr_IK_Kp, "$.item.content").toString();
+        List<Item> iExists = itemMapper.getItemLikeContent(iContent);
+        if(iExists != null){
+            return;
+        }
+
         // 对前端数据 check id
-        int iid, uid, asrid, kpid;
+        int iid, uid, asrid;
         String name = JSONPath.eval(item_Asr_Usr_IK_Kp, "$.user.name").toString();
         iid = itemMapper.maxIid() + 1;
         uid = userMapper.getUidByName(name);
         asrid = answerMapper.maxAsrid() + 1;
-        String kpStr = JSONPath.eval(item_Asr_Usr_IK_Kp, "$.knowledgepoint.knowledgepoint").toString();
-        kpid = knowledgePointMapper.getKpidByName(kpStr);
         JSONPath.set(item_Asr_Usr_IK_Kp, "$.item.iid", iid);
         JSONPath.set(item_Asr_Usr_IK_Kp, "$.item.uid", uid);
-        JSONPath.set(item_Asr_Usr_IK_Kp, "$.item.kpid", kpid);
         JSONPath.set(item_Asr_Usr_IK_Kp, "$.answer.asrid", asrid);
-        JSONPath.set(item_Asr_Usr_IK_Kp, "$.item_kp.iid", iid);
-        JSONPath.set(item_Asr_Usr_IK_Kp, "$.item_kp.kpid", kpid);
 
         // 构造 Pojo
         JSONObject answerJson = JSON.parseObject(JSONPath.eval(item_Asr_Usr_IK_Kp, "$.answer").toString());
         Answer answer = (Answer) JSONObject.toJavaObject(answerJson, Answer.class);
         JSONObject itemJson = JSON.parseObject(JSONPath.eval(item_Asr_Usr_IK_Kp, "$.item").toString());
         Item item = (Item) JSONObject.toJavaObject(itemJson, Item.class);
-        JSONObject item_kpJson = JSON.parseObject(JSONPath.eval(item_Asr_Usr_IK_Kp, "$.item_kp").toString());
-        Item_kp item_kp = (Item_kp) JSONObject.toJavaObject(item_kpJson, Item_kp.class);
 
         // 插入顺序 answer, item, item_kp
         int rslt;
         rslt = answerMapper.addAnswer(answer);
         rslt = itemMapper.addItem(item);
-        rslt = item_kpMapper.addItem_kp(item_kp);
 
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("Success!", "Added!");
-        return jsonObject;
+        String kpListStr = JSONPath.eval(item_Asr_Usr_IK_Kp, "$.knowledgepoints").toString();
+        List<Map<String, Object>> kpList = JSON.parseObject(kpListStr, new TypeReference<List<Map<String,Object>>>(){});
+        List<String> kpStrs = new ArrayList<>();
+        for(Map<String, Object> kp: kpList){
+            kpStrs.add(kp.get("knowledgepoint").toString());
+        }
+        List<Item_kp> item_kps = new ArrayList<>();
+        for(int i=0; i<kpStrs.size(); i++){
+            Knowledgepoint knowledgepoint = knowledgePointMapper.getKpByKp(kpStrs.get(i));
+            Item_kp item_kp = new Item_kp();
+            item_kp.setKpid(knowledgepoint.getKpid());
+            item_kp.setIid(iid);
+            item_kp.setDegree(5);
+            int relt = item_kpMapper.addItem_kp(item_kp);
+        }
     }
 }

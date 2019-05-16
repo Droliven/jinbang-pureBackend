@@ -2,7 +2,7 @@
     "后端网址": "11pm.top:8081/jinbang",
     "后端网络请求接口": [{
         "index 页": {
-            "method": "get",
+            "method": "get/post",
             "url": "http://11pm.top:8081/jinbang",
             "response": {
                 "@type": "java.util.HashMap",
@@ -17,16 +17,24 @@
                 "pwd": "123456"
             }, 
             "url": "http://11pm.top:8081/jinbang/home",
-            "response": {
+            "FailResponse": {
+                "@type": "java.util.HashMap",
+                "err": "Wrong pwd! / Name not exists!"
+            },
+            "SuccessResponse": {
                 "@type": "java.util.HashMap",
                 "seccess": "Login successful!"
             }
         }
     }, {
-        "试题选择页面，单选框选项值获取": {
+        "单选框选项值获取": {
             "method": "get",
             "url": "http://11pm.top:8081/jinbang/itemradio",
-            "response": {
+            "FailResponse": {
+                "@type": "java.util.HashMap",
+                "err": "Not Loged!"
+            },
+            "SuccessResponse": {
                 "@type": "java.util.HashMap",
                 "itemradio": [{
                     "@type": "java.util.HashMap",
@@ -129,7 +137,11 @@
         "获取全部试题（前端可加入分页功能）": {
             "method": "get",
             "url": "http://11pm.top:8081/itemall",
-            "response": {
+            "FailResponse": {
+                "@type": "java.util.HashMap",
+                "err": "Not Loged!"
+            },
+            "SuccessResponse": {
                 "@type": "java.util.HashMap",
                 "itemall": [{
                     "@type": "com.jinbang.model.Item_Asr_Usr_IK_Kp",
@@ -525,7 +537,11 @@
                 "name": "建国"
             },
             "url": "http://11pm.top:8081/jinbang/itemchoose",
-            "response": {
+            "FailResponse": {
+                "@type": "java.util.HashMap",
+                "err": "Not Loged!"
+            },
+            "SuccessResponse": {
                 "@type": "java.util.HashMap",
                 "itemchoose": [{
                     "@type": "com.jinbang.model.Item_Asr_Usr_IK_Kp",
@@ -570,7 +586,11 @@
                 "type": "翻译"
             },
             "url": "http://11pm.top:8081/jinbang/itemchoose",
-            "response": {
+            "FailResponse": {
+                "@type": "java.util.HashMap",
+                "err": "Not Loged!"
+            },
+            "SuccessResponse": {
                 "@type": "java.util.HashMap",
                 "itemchoose": [{
                     "@type": "com.jinbang.model.Item_Asr_Usr_IK_Kp",
@@ -824,7 +844,11 @@
                 ]
             },
             "url": "http://11pm.top:8081/jinbang/itemDeleteByIids",
-            "response": {
+            "FailResponse": {
+                "@type": "java.util.HashMap",
+                "err": "Not Loged!"
+            },
+            "SuccessResponse": {
                 "@type":"com.alibaba.fastjson.JSONObject",
                 "Affected answer rows":1,
                 "Affected item rows":1,
@@ -833,8 +857,170 @@
             }
         }
     }, {
+        "获取当前结点下的剩余树杈": {
+            "method": "get/post",
+            "data": {
+                "node": "电学"
+            }, 
+            "url": "http://11pm.top:8081/jinbang/getRestBranch",
+            "FailResponse": {
+                "@type": "java.util.HashMap",
+                "err": "Wrong pwd! / Name not exists!"
+            },
+            "SuccessResponse": {
+                "@type": "com.alibaba.fastjson.JSONObject",
+                "将来进行时": []
+            }
+        }
+    }, {
+        "将当前路径中各结点加入树的合适位置": {
+            "method": "post",
+            "data": {
+                "path": "化学/无机化学/氧化还原反应"
+            }, 
+            "url": "http://11pm.top:8081/jinbang/addKpByPath",
+            "FailResponse": "Not Logged!",
+            "SuccessResponse": "Knowledgepoints Added!"
+        }
+    }, {
+        "深度编辑题目": {
+            "method": "post",
+            "data": {
+                "old":{
+                    "answer":{
+                        "asrid":2,
+                        "content":"By the time this railroad has been extended to the remote small city, the local economy is sure to develop/be developed very fast."
+                    },
+                    "item":{
+                        "asrid":2,
+                        "content":"等这条铁路延伸至那座偏远的小城之后，当地的经济一定会得到迅猛的发展。（by the time）",
+                        "difficulty":5,
+                        "grade":"高中三年级",
+                        "iid":2,
+                        "source":"上海财经大学附属中学2016年9月月考",
+                        "type":"翻译",
+                        "uid":1
+                    },
+                    "item_kps":[
+                        {
+                            "degree":5,
+                            "iid":2,
+                            "kpid":5
+                        }
+                    ],
+                    "knowledgepoints":[
+                        {
+                            "depth":3,
+                            "knowledgepoint":"将来进行时",
+                            "kpid":5,
+                            "prepoint":4
+                        }
+                    ],
+                    "user":{
+                        "authority":"录入组卷员",
+                        "name":"建国",
+                        "uid":1
+                    }
+                },
+                "new":{
+                    "answer":{
+                        "asrid":2,
+                        "content":"By the time this railroad has been extended to the remote small city, the local economy is sure to develop/be developed very fast."
+                    },
+                    "item":{
+                        "asrid":2,
+                        "content":"等这条铁路延伸至那座偏远的小城之后，当地的经济一定会得到迅猛的发展。（by the time）",
+                        "difficulty":5,
+                        "grade":"高中三年级",
+                        "iid":2,
+                        "source":"上海财经大学附属中学2016年9月月考",
+                        "type":"翻译",
+                        "uid":1
+                    },
+                    "item_kps":[
+                        {
+                            "degree":5,
+                            "iid":2,
+                            "kpid":5
+                        }
+                    ],
+                    "knowledgepoints":[
+                        {
+                            "depth":3,
+                            "knowledgepoint":"将来进行时",
+                            "kpid":5,
+                            "prepoint":4
+                        }
+                    ],
+                    "user":{
+                        "authority":"录入组卷员",
+                        "name":"建国",
+                        "uid":1
+                    }
+                }
+            }, 
+            "url": "http://11pm.top:8081/jinbang/editItemFully",
+            "FailResponse": {
+                "@type": "com.alibaba.fastjson.JSONObject",
+                "Err!": "Not Logged!"
+            },
+            "SuccessResponse": {
+                "@type": "com.alibaba.fastjson.JSONObject",
+                "Success!": "Edit fully!"
+            }
+        }
+    }, {
+        "深度增加题目，并查重": {
+            "method": "post",
+            "data": {
+                "answer":{
+                    "asrid":2,
+                    "content":"By the time this railroad has been extended to the remote small city, the local economy is sure to develop/be developed very fast."
+                },
+                "item":{
+                    "asrid":2,
+                    "content":"等这条铁路延伸至那座偏远的小城之后，当地的经济一定会得到迅猛的发展。（by the time）",
+                    "difficulty":5,
+                    "grade":"高中三年级",
+                    "iid":2,
+                    "source":"上海财经大学附属中学2016年9月月考",
+                    "type":"翻译",
+                    "uid":1
+                },
+                "item_kps":[
+                    {
+                        "degree":5,
+                        "iid":2,
+                        "kpid":5
+                    }
+                ],
+                "knowledgepoints":[
+                    {
+                        "depth":3,
+                        "knowledgepoint":"将来进行时",
+                        "kpid":5,
+                        "prepoint":4
+                    }
+                ],
+                "user":{
+                    "authority":"录入组卷员",
+                    "name":"建国",
+                    "uid":1
+                }
+            }, 
+            "url": "http://11pm.top:8081/jinbang/addItemFully",
+            "FailResponse": {
+                "@type": "com.alibaba.fastjson.JSONObject",
+                "Err!": "Not Logged!"
+            },
+            "SuccessResponse": {
+                "@type": "com.alibaba.fastjson.JSONObject",
+                "Success!": "Add fully!"
+            }
+        }
+    }, {
         "用户注销": {
-            "method": "get",
+            "method": "get/post",
             "url": "http://11pm.top:8081/jinbang/signout",
             "response": {
                 "@type": "java.util.HashMap",

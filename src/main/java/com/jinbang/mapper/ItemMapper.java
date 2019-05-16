@@ -17,7 +17,7 @@ public interface ItemMapper {
     List<Item> getItemsBySource(String source);
     List<Item> getItemsByUid(int uid);
     Item getItemByAsrid(int asrid);
-    List<Item> getItemLikeContent(String content);
+    List<Item> getItemLikeContent(@Param(value="content") String content);
     List<String> getTypes();
     List<String> getSources();
     List<String> getGrades();

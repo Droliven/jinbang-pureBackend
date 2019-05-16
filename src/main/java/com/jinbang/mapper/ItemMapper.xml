@@ -32,7 +32,7 @@
     <select id="getItemByAsrid" resultType="com.jinbang.model.Item">
         select * from item where asrid=#{asrid};
     </select>
-    <select id="getItemLikeContent" resultType="com.jinbang.model.Item">
+    <select id="getItemLikeContent" parameterType="java.lang.String" resultType="com.jinbang.model.Item">
         <bind name="pattern" value="'%' + content + '%'" />
         select * from item where content like #{pattern};
     </select>

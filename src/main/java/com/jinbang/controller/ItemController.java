@@ -55,6 +55,7 @@ public class ItemController {
             return new ResponseEntity<Map<String,Object>>(map, HttpStatus.BAD_REQUEST);
         }
     }
+
     @GetMapping("/itemradio")
     public ResponseEntity<Map<String,Object>> itemradio(HttpSession session){
         Map<String, Object> map = new HashMap<String, Object>();
@@ -67,6 +68,7 @@ public class ItemController {
             return new ResponseEntity<Map<String,Object>>(map, HttpStatus.BAD_REQUEST);
         }
     }
+
     @PostMapping("/itemchoose")
     public ResponseEntity<Map<String,Object>> itemchoose(HttpServletRequest request, HttpSession session) {
         Map<String, Object> map = new HashMap<String, Object>();
@@ -84,7 +86,8 @@ public class ItemController {
             return new ResponseEntity<Map<String,Object>>(map, HttpStatus.BAD_REQUEST);
         }
     }
-//    @DeleteMapping ("/itemDeleteByIids")
+
+    //    @DeleteMapping ("/itemDeleteByIids")
 //    public ResponseEntity<JSONObject> itemDeleteByIids(HttpServletRequest request, HttpSession session){
 //        if(session.getAttribute("name")!=null){
 //            JSONArray jsonArray = JSON.parseArray(request.getParameter("iids").toString());
@@ -116,6 +119,7 @@ public class ItemController {
 //        }
 //        return jsonParam;
 //    }
+
     @DeleteMapping ("/itemDeleteByIids")
     public ResponseEntity<JSONObject> itemDeleteByIids(@RequestBody JSONObject jsonParam, HttpSession session){
         if(session.getAttribute("name")!=null){
@@ -158,7 +162,9 @@ public class ItemController {
     @PostMapping ("/editItemFully")
     public ResponseEntity<JSONObject> editItemFully(@RequestBody JSONObject jsonParam, HttpSession session){
         if(session.getAttribute("name")!=null){
-            JSONObject jsonObject = itemService.editItemFully(jsonParam);
+            itemService.editItemFully(jsonParam);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("Success!", "Edit fully!");
             return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.OK);
         } else {
             JSONObject jsonObject = new JSONObject();
@@ -170,7 +176,9 @@ public class ItemController {
     @PostMapping("/addItemFully")
     public ResponseEntity<JSONObject> addItemFully(@RequestBody JSONObject jsonParam, HttpSession session){
         if(session.getAttribute("name")!=null){
-            JSONObject jsonObject = itemService.addItemFully(jsonParam);
+            itemService.addItemFully(jsonParam);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("Success!", "Add fully!");
             return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.OK);
         } else {
             JSONObject jsonObject = new JSONObject();
