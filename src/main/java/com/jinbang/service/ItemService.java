@@ -143,6 +143,22 @@ public class ItemService {
         iid = (int) JSONPath.eval(oldAndNewItem_Asr_Usr_IK_Kp, "$.old.item.iid");
         asrid = (int) JSONPath.eval(oldAndNewItem_Asr_Usr_IK_Kp, "$.old.answer.asrid");
         uid = (int) JSONPath.eval(oldAndNewItem_Asr_Usr_IK_Kp, "$.old.user.uid");
+
+        // 插入顺序 answer, item, item_kp
+        JSONPath.set(oldAndNewItem_Asr_Usr_IK_Kp, "$.new.item.iid", iid);
+        JSONPath.set(oldAndNewItem_Asr_Usr_IK_Kp, "$.new.item.asrid", asrid);
+        JSONPath.set(oldAndNewItem_Asr_Usr_IK_Kp, "$.new.answer.asrid", asrid);
+        JSONPath.set(oldAndNewItem_Asr_Usr_IK_Kp, "$.new.item.uid", uid);
+        // 再修改数据
+        JSONObject itemJson = JSON.parseObject(JSONPath.eval(oldAndNewItem_Asr_Usr_IK_Kp, "$.new.item").toString());
+        Item item = (Item) JSONObject.toJavaObject(itemJson, Item.class);
+        JSONObject asrJson = JSON.parseObject(JSONPath.eval(oldAndNewItem_Asr_Usr_IK_Kp, "$.new.answer").toString());
+        Answer answer = (Answer) JSONObject.toJavaObject(asrJson, Answer.class);
+        // 答案 asrId 不会变
+        int reltAnswer = answerMapper.updateAnswerById(answer);
+        // 题目 iid 不会变
+        int rsltItem = itemMapper.upgradeItemById(item);
+
         // kp 可能发生 断链重连，所以旧的 kpid 不可信，只有 kp 才是可信的
         String oldKpListStr = JSONPath.eval(oldAndNewItem_Asr_Usr_IK_Kp, "$.old.knowledgepoints").toString();
         List<Map<String, Object>> oldKpList = JSON.parseObject(oldKpListStr, new TypeReference<List<Map<String,Object>>>(){});
@@ -177,19 +193,7 @@ public class ItemService {
             item_kp.setIid(iid);
             int rslt = item_kpMapper.addItem_kp(item_kp);
         }
-        JSONPath.set(oldAndNewItem_Asr_Usr_IK_Kp, "$.new.item.iid", iid);
-        JSONPath.set(oldAndNewItem_Asr_Usr_IK_Kp, "$.new.item.asrid", asrid);
-        JSONPath.set(oldAndNewItem_Asr_Usr_IK_Kp, "$.new.answer.asrid", asrid);
-        JSONPath.set(oldAndNewItem_Asr_Usr_IK_Kp, "$.new.item.uid", uid);
-        // 再修改数据
-        JSONObject itemJson = JSON.parseObject(JSONPath.eval(oldAndNewItem_Asr_Usr_IK_Kp, "$.new.item").toString());
-        Item item = (Item) JSONObject.toJavaObject(itemJson, Item.class);
-        JSONObject asrJson = JSON.parseObject(JSONPath.eval(oldAndNewItem_Asr_Usr_IK_Kp, "$.new.answer").toString());
-        Answer answer = (Answer) JSONObject.toJavaObject(asrJson, Answer.class);
-        // 答案 asrId 不会变
-        int reltAnswer = answerMapper.updateAnswerById(answer);
-        // 题目 iid 不会变
-        int rsltItem = itemMapper.upgradeItemById(item);
+
     }
 
     // 新建题目，并查重
