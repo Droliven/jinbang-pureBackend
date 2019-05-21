@@ -28,7 +28,7 @@ import java.util.Map;
 
 @CrossOrigin(origins = "*",
         maxAge = 3600,
-        methods = {RequestMethod.GET})
+        methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE})
 @RestController
 public class ItemController {
     @Autowired

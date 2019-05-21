@@ -13,7 +13,7 @@ public class KPPathService {
     @Autowired
     KnowledgePointMapper knowledgePointMapper;
 
-    // 获取本项目中的这种特定树结构下的所有 key, 不具推广性
+    // 获取本项目中的这种特定树结构下的所有 key, 不具推广性。递归算法
     private void getAllKeys(String jsonArrayString, Set<String> keySet) {
         List<Map<String, Object>> listMap = JSON.parseObject(jsonArrayString, new TypeReference<List<Map<String,Object>>>(){});
         for(int i=0; i < listMap.size(); i++){
@@ -48,8 +48,10 @@ public class KPPathService {
         }
     }
 
+    // 递归算法。给定前驱路径，递归获取下一层路径，存于 Json
     private void getAllPathsHelp(JSONArray fullJson, String fatherPath, int fatherId) {
         JSONArray jsonArray = new JSONArray();
+        // 获取父亲的所有孩子，构成数组
         List<Knowledgepoint> knowledgepoints = knowledgePointMapper.getKpsByPreId(fatherId);
         if (knowledgepoints != null) {
             for (int i = 0; i < knowledgepoints.size(); i++) {
@@ -86,7 +88,7 @@ public class KPPathService {
         }
     }
 
-    // 通过某一结点名来获取该结点下的子树，即剩余分支
+    // 通过某一结点名来获取该结点下的子树，即剩余分支。递归算法
     public JSONArray getRestBranch(String node){
         JSONArray jsonArray = new JSONArray();
         List<Knowledgepoint> knowledgepoints;

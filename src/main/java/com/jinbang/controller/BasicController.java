@@ -14,10 +14,11 @@ import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 @CrossOrigin(origins = "*",
         maxAge = 3600,
-        methods = {RequestMethod.GET})
+        methods = {RequestMethod.GET, RequestMethod.POST})
 @RestController
 public class BasicController {
     @Autowired
@@ -63,7 +64,7 @@ public class BasicController {
         Map<String, Object> map = new HashMap<String, Object>();
         // 取出 session 中的 name
         Object name = session.getAttribute("name");
-//        System.out.println(name.toString() + "注销！");
+        System.out.println("注销！");
         session.removeAttribute("name");
         map.put("success", "Logged out!");
         return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
