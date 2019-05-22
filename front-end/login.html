@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登陆</title>
+    <link rel="stylesheet" type="text/css" href="css/stylesLogin.css">
+    <script src="js/md5.js"></script>
+</head>
+
+<body>
+<div class="htmleaf-container">
+    <div class="wrapper">
+        <div class="container">
+            <div id="k">
+                <h1>金榜系统</h1>
+
+                <form class="form" method="POST">
+                    <input id="account" type="text" placeholder="账号" value="铁柱">
+                    <input id="pwd" type="password" placeholder="密码" value="123456">
+                    <button type="submit" id="login-button" onclick="login()">登录</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="js/jquery-3.4.1.min.js" type="text/javascript"></script>
+<script>
+    jQuery.support.cors = true;
+    $('#login-button').click(function (event) {
+        event.preventDefault();
+        $('form').fadeOut(500);
+        $('.wrapper').addClass('form-success');
+    });
+
+    function login() {
+        var account = $("#account").val().toString();
+        var pwd = $("#pwd").val().toString();
+        pwd = pwd.MD5(32);
+        var data = {
+            "name": account,
+            "pwd": pwd
+        };
+        // console.log(data);
+        jQuery.support.cors = true;
+        // 登录
+        $.ajax({
+            type: "POST",
+            url: "http://localhost:8081/jinbang/home",
+            dataType: 'JSON',
+            data: {
+                "name": "翠花",
+                "pwd": "e10adc3949ba59abbe56e057f20f883e"
+            }, xhrFields: {
+                withCredentials: true
+            }, success: function (data) {
+                // console.log(data);
+                if (data.success == "Login successful!") {
+                    window.localStorage.setItem("name", "翠花");
+                    window.location.href = "home.html";
+                } else {
+                    alert("Wrong!");
+                    window.location.reload();
+                }
+            }
+        });
+    }
+</script>
+
+
+</body>
+
+</html>
