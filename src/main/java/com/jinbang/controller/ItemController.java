@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.BufferedReader;
@@ -26,9 +27,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin(origins = "*",
-        maxAge = 3600,
-        methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE})
 @RestController
 public class ItemController {
     @Autowired
@@ -57,9 +55,16 @@ public class ItemController {
     }
 
     @GetMapping("/itemradio")
-    public ResponseEntity<Map<String,Object>> itemradio(HttpSession session){
+    public ResponseEntity<Map<String,Object>> itemradio(HttpServletRequest request, HttpSession session){
         Map<String, Object> map = new HashMap<String, Object>();
         if(session.getAttribute("name")!=null){
+//            // 打印 cookie
+//            Cookie[] cookies = request.getCookies();
+//            if (cookies != null && cookies.length > 0) {
+//                for (Cookie cookie : cookies) {
+//                    System.out.println(cookie.getName() + " : " + cookie.getValue());
+//                }
+//            }
             List<HashMap> itemlist = itemService.itemradio();
             map.put("itemradio", itemlist);
             return new ResponseEntity<>(map, HttpStatus.OK);

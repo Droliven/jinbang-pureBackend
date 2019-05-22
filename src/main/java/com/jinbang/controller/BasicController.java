@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
@@ -16,9 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-@CrossOrigin(origins = "*",
-        maxAge = 3600,
-        methods = {RequestMethod.GET, RequestMethod.POST})
 @RestController
 public class BasicController {
     @Autowired
@@ -46,6 +45,13 @@ public class BasicController {
                 System.out.println(name + " 密码正确登录成功");
                 // 写入 session
                 session.setAttribute("name", name);
+//                // 打印 cookie
+//                Cookie[] cookies = request.getCookies();
+//                if (cookies != null && cookies.length > 0) {
+//                    for (Cookie cookie : cookies) {
+//                        System.out.println(cookie.getName() + " : " + cookie.getValue());
+//                    }
+//                }
             } else {
 //                System.out.println("密码错误");
                 map.put("err", "Wrong pwd!");
