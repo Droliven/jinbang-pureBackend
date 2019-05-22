@@ -13,47 +13,28 @@
 <form class="layui-form layui-form-pane" action="">
     <div class="layui-form-item">
         <label class="layui-form-label">年级</label>
-        <div class="layui-input-block">
-            <input type="radio" name="grade" value="男" title="男">
-            <input type="radio" name="grade" value="女" title="女" checked>
+        <div class="layui-input-block" id="grades-div">
+<!--            插入-->
+<!--            <input type="radio" name="grade" value="翻译" title="翻译"><input type="radio" name="grade" value="计算" title="计算"><input type="radio" name="grade" value="填空" title="填空"><input type="radio" name="grade" value="选择" title="选择"></div>-->
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">来源</label>
-        <div class="layui-input-block">
-            <input type="radio" name="source" value="男" title="男">
-            <input type="radio" name="source" value="女" title="女" checked>
-        </div>
+        <div class="layui-input-block" id="sources-div"></div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">录入员</label>
-        <div class="layui-input-block">
-            <input type="radio" name="user" value="男" title="男">
-            <input type="radio" name="user" value="女" title="女" checked>
-        </div>
+        <div class="layui-input-block" id="names-div"></div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">类型</label>
-        <div class="layui-input-block">
-            <input type="radio" name="type" value="男" title="男">
-            <input type="radio" name="type" value="女" title="女" checked>
-        </div>
+        <div class="layui-input-block" id="types-div"></div>
     </div>
-    <div class="layui-form-item">
+    <div class="layui-form-item" id="groupDiv">
         <label class="layui-form-label">知识点</label>
-        <div class="layui-input-inline">
-            <select name="select1" lay-filter="tid" class="tid">
-                <option value="">数学</option>
-            </select>
-        </div>
-        <div class="layui-input-inline">
-            <select name="select2" lay-filter="qid" disabled>
-                <option value="">微积分</option>
-            </select>
-        </div>
-        <div class="layui-input-inline">
-            <select name="select3" lay-filter="aid" disabled>
-                <option value="">中值定理</option>
+        <div class="layui-input-inline" id="selectDiv1">
+            <select name="select1" lay-filter="select1" id="select1">
+                <option value="">--请选择--</option>
             </select>
         </div>
     </div>
@@ -71,8 +52,9 @@
     layui.use(['element','jquery', 'form'], function(){
         var element = layui.element;
         var form = layui.form;
-        var $ = jQuery = layui.jquery;
+        var $ = layui.jquery;
 
+        var paths;
         // 获取选项
         var itemradio;
         $(document).ready(function() {
@@ -88,80 +70,145 @@
                 }, xhrFields: {
                     withCredentials: true
                 }, success: function (data) {
-                    console.log($.cookie());
-                    console.log(data);
+                    // console.log(data);
                     if (data.success == "Login successful!") {
                         window.localStorage.setItem("name", "翠花");
                         // window.location.href = "home.html";
+                        // 获取表单头
+                        $.ajax({
+                            type: "GET",
+                            url: "http://localhost:8081/jinbang/itemradio",
+                            xhrFields: {
+                                withCredentials: true
+                            }, success: function (data) {
+                                if (data.err == "Not Loged!") {
+                                    // console.log("Not Loged!");
+                                } else {
+                                    if(data.itemradio){
+                                        itemradio = data.itemradio;
+                                        console.log(itemradio);
+                                        var types = itemradio[0].types;
+                                        var sources = itemradio[1].sources;
+                                        var grades = itemradio[2].grades;
+                                        var names = itemradio[3].names;
+                                        paths = itemradio[4].paths;
+                                        var inputStr = '<input type="radio" name="sex" value="男" title="男">';
+                                        // console.log(typeof types);
+                                        // 设置单选框
+                                        types.forEach(function (item) {
+                                            let temp = $(inputStr);
+                                            temp.attr("name", "type");
+                                            temp.attr("value", item);
+                                            temp.attr("title", item);
+                                            // console.log(temp);
+                                            $("#types-div").append(temp);
+                                        })
+                                        $("#types-div input:first-child").attr("checked", true);
+                                        sources.forEach(function (item) {
+                                            let temp = $(inputStr);
+                                            temp.attr("name", "source");
+                                            temp.attr("value", item);
+                                            temp.attr("title", item);
+                                            // console.log(temp);
+                                            $("#sources-div").append(temp);
+                                        })
+                                        $("#sources-div input:first-child").attr("checked", true);
+                                        grades.forEach(function (item) {
+                                            let temp = $(inputStr);
+                                            temp.attr("name", "grade");
+                                            temp.attr("value", item);
+                                            temp.attr("title", item);
+                                            // console.log(temp);
+                                            $("#grades-div").append(temp);
+                                        })
+                                        $("#grades-div input:first-child").attr("checked", true);
+                                        names.forEach(function (item) {
+                                            let temp = $(inputStr);
+                                            temp.attr("name", "name");
+                                            temp.attr("value", item);
+                                            temp.attr("title", item);
+                                            // console.log(temp);
+                                            $("#names-div").append(temp);
+                                        })
+                                        $("#names-div input:first-child").attr("checked", true);
+                                        // 先设置级联下拉选择器的第一层
+                                        var optionStr = '<option value="">--请选择--</option>';
+                                        // console.log(typeof paths);
+                                        for(var i=0; i<paths.length; i++){
+                                            let temp = $(optionStr);
+                                            temp.attr("value", Object.keys(paths[i])[0]);
+                                            temp.text(Object.keys(paths[i])[0]);
+                                            // console.log(temp);
+                                            $("#select1").append(temp);
+                                        }
+                                        form.render();
+                                    }
+                                }
+                            }
+                        });
                     } else {
                         alert("Wrong!");
                         // window.location.reload();
                     }
                 }
             });
-
-            // 获取表单头
-            $.ajax({
-                type: "GET",
-                url: "http://localhost:8081/jinbang/itemradio",
-                xhrFields: {
-                    withCredentials: true
-                }, success: function (data) {
-                    if (data.err == "Not Loged!") {
-                        console.log("Not Loged!");
-                    } else {
-                        itemradio = data.itemradio;
-                        console.log(itemradio);
+        });
+        // 通过结点名，获取子树数组
+        function getSubStrByNode(fullPath, node, flag){
+            var subArr;
+            if(flag){
+                return subArr;
+            } else{
+                if(fullPath && fullPath.constructor == Array){
+                    // 遇到 Array 则递归
+                    for(var i=0; i<fullPath.length; i++){
+                        subArr = getSubStrByNode(fullPath[i], node, flag);
+                        // 层层上交
+                        if(subArr){
+                            break;
+                        }
                     }
                 }
-            });
-        });
-        // // 多级联动下拉框
-        // form.on('select(province)',function(data){
-        //     $('.company_info .city select').empty();//选择省的时候清空城市地区的值
-        //     $('.company_info .city select').html('<option value="">城市</option>');
-        //     $('.company_info .area select').empty();
-        //     $('.company_info .area select').html('<option value="">区/县</option>');
-        //     if(data.value){
-        //         var ajaxJson = {
-        //             "parentId":data.value
-        //         }
-        //         getPost(urlListByParentId,ajaxJson,localStorage.getItem("ACCESSTOKEN"),function(res){
-        //             if(res.respCode == 0){
-        //                 if(res.obj.list.length>0){
-        //                     var str="";
-        //                     res.obj.list.forEach(function(ele,index){
-        //                         str='<option value="'+ele.id+'">'+ele.areaName+'</option>';
-        //                         $('.company_info .city select').append(str);
-        //                     })
-        //                     form.render('select');
-        //                 }
-        //             }
-        //         })
-        //     }
-        // })
-        // /*区县菜单*/
-        // form.on('select(city)',function(data){
-        //     $('.company_info .area select').empty();//选择市的时候清空区的值
-        //     $('.company_info .area select').html('<option value="">区/县</option>');
-        //     if(data.value){
-        //         var ajaxJson = {
-        //             "parentId":data.value
-        //         }
-        //         getPost(urlListByParentId,ajaxJson,localStorage.getItem("ACCESSTOKEN"),function(res){
-        //             if(res.respCode == 0){
-        //                 if(res.obj.list.length>0){
-        //                     var str="";
-        //                     res.obj.list.forEach(function(ele,index){
-        //                         str='<option value="'+ele.id+'">'+ele.areaName+'</option>';
-        //                         $('.company_info .area select').append(str);
-        //                     })
-        //                     form.render('select');
-        //                 }
-        //             }
-        //         })
-        //     }
-        // });
+                if(fullPath && fullPath.constructor == Object && !flag){
+                    // 遇到 Object 则展开
+                    for(var key in fullPath){
+                        if(key == node){
+                            flag = true;
+                            return fullPath[key];
+                        }
+                    }
+                }
+                return subArr;
+            }
+        }
+        // 多级联动下拉框
+        form.on('select(select1)', function(data){
+            // console.log(data.value);
+            // 获取子树
+            var subArr = getSubStrByNode(paths, data.value, false);
+
+            // 先看有无下级，若有清空，若无新建
+            let subDom = $('#select2');
+            // console.log(subDom);
+            if(subDom.length>0){
+                subDom.empty();
+                let optionDomStr = '<option value="">一级</option>';
+                subDom.append(optionDomStr);
+            } else {
+                let subDomStr = $('<div class="layui-input-inline" id="selectDiv2"><select name="select2" lay-filter="select2" id="select2"><option value="">--请选择--</option></select></div>');
+                $("#groupDiv").append(subDomStr);
+            }
+            // 添加下层
+            for(var i=0; i<subArr.length; i++){
+                for(var key in subArr[i]){
+                    let temp = $('<option value="">--请选择--</option>');
+                    temp.text(key);
+                    temp.attr("value", key);
+                    $("#select2").append(temp);
+                }
+            }
+            form.render();
+        })
 
         form.on('submit(formDemo)', function(data){
             layer.msg(JSON.stringify(data.field));
