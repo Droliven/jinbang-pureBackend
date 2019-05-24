@@ -4,8 +4,8 @@ public class Buildpaper {
     private int pid;
     private int iid;
     private int itemorder;
-    private int sumscore;
-    private int sumtimemin;
+    private int score;
+    private int timemin;
 
     public void setPid(int pid){
         this.pid = pid;
@@ -16,11 +16,11 @@ public class Buildpaper {
     public void setItemorder(int itemorder){
         this.itemorder = itemorder;
     }
-    public void setSumscore(int sumscore){
-        this.sumscore = sumscore;
+    public void setScore(int sumscore){
+        this.score = sumscore;
     }
-    public void setSumtimemin(int sumtimemin){
-        this.sumtimemin = sumtimemin;
+    public void setTimemin(int sumtimemin){
+        this.timemin = sumtimemin;
     }
     public int getPid(){
         return pid;
@@ -31,10 +31,10 @@ public class Buildpaper {
     public int getItemorder(){
         return itemorder;
     }
-    public int getSumscore(){
-        return sumscore;
+    public int getScore(){
+        return score;
     }
-    public int getSumtimemin(){
-        return sumtimemin;
+    public int getTimemin(){
+        return timemin;
     }
 }

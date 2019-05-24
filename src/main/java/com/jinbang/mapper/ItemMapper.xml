@@ -47,13 +47,13 @@
     </select>
     <select id="getItemsByGradeSourceTypeUid" resultType="com.jinbang.model.Item">
             select * from item where iid is not null
-        <if test="type!= null" >
+        <if test="type!= ''" >
             and type = #{type, jdbcType=VARCHAR}
         </if>
-        <if test="grade!=null" >
+        <if test="grade!=''" >
             and grade = #{grade, jdbcType=VARCHAR}
         </if>
-        <if test="source!=null" >
+        <if test="source!=''" >
             and source = #{source, jdbcType=VARCHAR}
         </if>
         <if test="uid!=-1" >
@@ -61,6 +61,6 @@
         </if>
     </select>
     <select id="maxIid" resultType="java.lang.Integer">
-        select max(iid) from item;
+        select ifnull(max(iid), -1) from item;
     </select>
 </mapper>

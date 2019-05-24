@@ -1027,5 +1027,79 @@
                 "success": "Logged out!"
             }
         }
+    }, {
+        "新建空白试卷": {
+            "method": "post",
+            "data": {
+                "title": "上大数据库原理2期末",
+                "name": "翠花"
+            },
+            "url": "http://11pm.top:8081/jinbang/createEmptyPaper",
+            "FailResponse": "NotLogged",
+            "SuccessResponse": "Success"
+        }
+    }, {
+        "组卷：为试卷添加题目": {
+            "method": "post",
+            "data": {
+                "pid": 1,
+                "items": [{
+                    "iid": 1,
+                    "itemorder": 1,
+                    "score": 10,
+                    "timemin": 5
+                }, {
+                    "iid": 2,
+                    "itemorder": 2,
+                    "score": 10,
+                    "timemin": 5
+                }]
+            },
+            "url": "http://11pm.top:8081/jinbang/buildPaper",
+            "FailResponse": "NotLogged",
+            "SuccessResponse": "Success"
+        }
+    }, {
+        "获取全部试卷详情": {
+            "method": "get/post",
+            "url": "http://11pm.top:8081/jinbang/getAllPaperDetail",
+            "FailResponse": {
+                "Err": "NotLogged"
+            },
+            "SuccessResponse": {
+                "allPaperDetail":[{
+                    "pid": 1,
+                    "title": "shangda",
+                    "builder": "翠花",
+                    "sumscore": 100,
+                    "sumtimemin": 150,
+                    "buildpapers": [{
+                        "pid": 1,
+                        "iid": 5,
+                        "itemorder": 1,
+                        "score": 10,
+                        "timemin": 10,
+                        "item": {
+                            
+                        },
+                        "answer": {
+                            
+                        }
+                    }, {
+                        "pid": 1,
+                        "iid": 5,
+                        "itemorder": 1,
+                        "score": 10,
+                        "timemin": 10,
+                        "item": {
+                            
+                        },
+                        "answer": {
+                            
+                        }
+                    }]
+                }]
+            }
+        }
     }
 ]}

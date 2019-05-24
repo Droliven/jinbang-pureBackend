@@ -19,4 +19,16 @@
     <select id="getItem_kpByIid" resultType="com.jinbang.model.Item_kp">
         select * from item_kp where iid=#{iid};
     </select>
+    <select id="getItem_kpByKpid" resultType="com.jinbang.model.Item_kp">
+        select * from item_kp where kpid=#{kpid};
+    </select>
+    <select id="getItem_kpByIidAndKpid" resultType="com.jinbang.model.Item_kp">
+        select * from item_kp where 1=1
+        <if test="iid!=-1" >
+            and iid = #{iid, jdbcType=INTEGER}
+        </if>
+        <if test="kpid!=-1" >
+            and kpid = #{kpid, jdbcType=INTEGER}
+        </if>
+    </select>
 </mapper>

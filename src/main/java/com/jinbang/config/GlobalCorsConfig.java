@@ -10,8 +10,8 @@ public class GlobalCorsConfig {
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
-            @Override
             //重写父类提供的跨域请求处理的接口
+            @Override
             public void addCorsMappings(CorsRegistry registry) {
                 //添加映射路径
                 registry.addMapping("/**")

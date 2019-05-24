@@ -13,6 +13,7 @@ import com.jinbang.model.Knowledgepoint;
 import com.jinbang.model.User;
 import com.jinbang.service.ItemService;
 import com.jinbang.service.KPPathService;
+import com.jinbang.service.PaperService;
 import com.mysql.cj.xdevapi.JsonArray;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,20 +45,22 @@ public class JinbangApplicationTests {
     KPPathService kpPathService;
     @Autowired
     AnswerMapper answerMapper;
+    @Autowired
+    PaperService paperService;
 
-    @Test
-    public void UserTest(){
-        User user;
-        user = userMapper.loadByUserName("翠花");
-        System.out.println(user);
-        System.out.println(userMapper.getAll());
-    }
-
-    @Test
-    public void LikeTest(){
-        System.out.println(answerMapper.getAnswersLikeContent("By the time"));
-//        System.out.println(itemMapper.getItemLikeContent("等这条"));
-    }
+//    @Test
+//    public void UserTest(){
+//        User user;
+//        user = userMapper.loadByUserName("翠花");
+//        System.out.println(user);
+//        System.out.println(userMapper.getAll());
+//    }
+//
+//    @Test
+//    public void LikeTest(){
+//        System.out.println(answerMapper.getAnswersLikeContent("By the time"));
+////        System.out.println(itemMapper.getItemLikeContent("等这条"));
+//    }
 //    @Test
 //    public void testBcrypt(){
 //        // Hash a password for the first time
@@ -130,4 +133,12 @@ public class JinbangApplicationTests {
 //        kpPathService.addKpByPath("数学/统计学/正态分布");
 //        System.out.println(kpPathService.getRestBranch("").toString());
 //    }
+    @Test
+    public void createEmptyPaper(){
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("pid", 5);
+        jsonObject.put("title", "shangda");
+        jsonObject.put("name", "翠花");
+        paperService.createEmptyPaper(jsonObject);
+    }
 }

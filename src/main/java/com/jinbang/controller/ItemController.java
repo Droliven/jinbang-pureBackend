@@ -40,19 +40,19 @@ public class ItemController {
     @Autowired
     KPPathService kpPathService;
 
-    @GetMapping("/itemall")
-    public ResponseEntity<Map<String,Object>> itemall(HttpSession session) {
-        Map<String, Object> map = new HashMap<String, Object>();
-        if(session.getAttribute("name")!=null){
-            List<Item_Asr_Usr_IK_Kp> item_asr_usr_ik_kps;
-            item_asr_usr_ik_kps = itemService.itemall();
-            map.put("itemall", item_asr_usr_ik_kps);
-            return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
-        } else {
-            map.put("err", "Not Logged!");
-            return new ResponseEntity<Map<String,Object>>(map, HttpStatus.BAD_REQUEST);
-        }
-    }
+//    @GetMapping("/itemall")
+//    public ResponseEntity<Map<String,Object>> itemall(HttpSession session) {
+//        Map<String, Object> map = new HashMap<String, Object>();
+//        if(session.getAttribute("name")!=null){
+//            List<Item_Asr_Usr_IK_Kp> item_asr_usr_ik_kps;
+//            item_asr_usr_ik_kps = itemService.itemall();
+//            map.put("itemall", item_asr_usr_ik_kps);
+//            return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+//        } else {
+//            map.put("err", "Not Logged!");
+//            return new ResponseEntity<Map<String,Object>>(map, HttpStatus.BAD_REQUEST);
+//        }
+//    }
 
     @GetMapping("/itemradio")
     public ResponseEntity<Map<String,Object>> itemradio(HttpServletRequest request, HttpSession session){
@@ -79,12 +79,36 @@ public class ItemController {
         Map<String, Object> map = new HashMap<String, Object>();
         if(session.getAttribute("name")!=null){
             String type = request.getParameter("type");
+//            System.out.println("controller type: " + type);
             String grade = request.getParameter("grade");
             String source = request.getParameter("source");
             String name = request.getParameter("name");
+            if(type == null){
+                type = "";
+            }
+            if(grade == null){
+                grade = "";
+            }
+            if(source == null){
+                source = "";
+            }
+            if(name == null){
+                name = "";
+            }
+            String path = request.getParameter("path");
+            if(!path.equals("")){
+                System.out.println("controller path: " + path);
+                String [] pathssplit = path.split("/");
+                String kp = pathssplit[pathssplit.length-1];
+                System.out.println("controller kp: " + kp);
+                List<Item_Asr_Usr_IK_Kp> item_asr_usr_ik_kps = itemService.itemchoose(type, grade, source, name, kp);
+                map.put("itemchooses", item_asr_usr_ik_kps);
+            } else {
+//                System.out.println("path is empty");
+                List<Item_Asr_Usr_IK_Kp> item_asr_usr_ik_kps = itemService.itemchoose(type, grade, source, name, path);
+                map.put("itemchooses", item_asr_usr_ik_kps);
+            }
 //        System.out.println("type: " + type + ", grade: " + grade + ", source: " + source + ", name: " + name);
-            List<Item_Asr_Usr_IK_Kp> item_asr_usr_ik_kps = itemService.itemchoose(type, grade, source, name);
-            map.put("itemchoose", item_asr_usr_ik_kps);
             return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
         } else {
             map.put("err", "Not Logged!");
@@ -126,12 +150,13 @@ public class ItemController {
 //    }
 
     @DeleteMapping ("/itemDeleteByIids")
-    public ResponseEntity<JSONObject> itemDeleteByIids(@RequestBody JSONObject jsonParam, HttpSession session){
+    public ResponseEntity<JSONObject> itemDeleteByIids(HttpServletRequest request, HttpSession session){
         if(session.getAttribute("name")!=null){
             // 直接将json信息打印出来
-            JSONArray jsonArray = JSON.parseArray(jsonParam.get("iids").toString());
+//            System.out.println(request.getParameter("iids").toString());
+            JSONArray reqArray = JSON.parseArray(request.getParameter("iids").toString());
 //            System.out.println(jsonArray.toString());
-            JSONObject jsonObject = itemService.itemDeleteByIids(jsonArray);
+            JSONObject jsonObject = itemService.itemDeleteByIids(reqArray);
             return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.OK);
         } else {
             JSONObject jsonObject = new JSONObject();

@@ -24,6 +24,9 @@
         select * from paper where title like #{pattern};
     </select>
     <select id="maxPid" resultType="java.lang.Integer">
-        select max(pid) from paper;
+        select ifnull(max(pid), -1) from paper;
     </select>
+    <insert id="addPaperQuick">
+        insert into paper(pid, title, uid) values(#{pid}, #{title},  #{uid});
+    </insert>
 </mapper>

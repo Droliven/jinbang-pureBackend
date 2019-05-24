@@ -23,7 +23,7 @@
         select distinct name from user order by convert(name using gbk) asc;
     </select>
     <select id="maxUid" resultType="java.lang.Integer">
-        select max(uid) from user;
+        select ifnull(max(uid), -1) from user;
     </select>
     <select id="getUidByName" resultType="java.lang.Integer">
         select uid from user where name=#{name};

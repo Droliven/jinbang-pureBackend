@@ -21,6 +21,6 @@
         select * from answer where content like #{pattern};
     </select>
     <select id="maxAsrid" resultType="java.lang.Integer">
-        select max(asrid) from answer;
+        select ifnull(max(asrid), -1) from answer;
     </select>
 </mapper>

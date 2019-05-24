@@ -216,12 +216,14 @@ delimiter ;
 DROP TRIGGER IF EXISTS `trig_delete_paper_sum`;
 delimiter ;;
 CREATE TRIGGER `trig_delete_paper_sum` AFTER DELETE ON `buildpaper` FOR EACH ROW begin
-update paper
-set sumscore = sumscore - old.score
-where paper.pid= old.pid;
-update paper
-set sumtimemin = sumtimemin - old.timemin
-where paper.pid= old.pid;
+declare temp int;
+select sumscore into temp from paper where pid = old.pid;
+if (temp = old.score) then
+		delete from paper where paper.pid = old.pid;
+else
+		update paper set sumscore = sumscore - old.score where paper.pid= old.pid;
+    update paper set sumtimemin = sumtimemin - old.timemin where paper.pid= old.pid;
+end if;
 end
 ;;
 delimiter ;
@@ -237,19 +239,6 @@ if (old.pid = new.pid and old.iid <> new.iid) then
     update paper set sumscore = sumscore + new.score where paper.pid= new.pid;
     update paper set sumtimemin = sumtimemin - old.timemin where paper.pid= new.pid;
     update paper set sumtimemin = sumtimemin + new.timemin where paper.pid= new.pid;
-end if;
-end
-;;
-delimiter ;
-
--- ----------------------------
--- Triggers structure for table paper
--- ----------------------------
-DROP TRIGGER IF EXISTS `trig_update_paper`;
-delimiter ;;
-CREATE TRIGGER `trig_update_paper` AFTER UPDATE ON `paper` FOR EACH ROW begin
-if(new.sumscore = 0) then
-delete from paper where pid = new.pid;
 end if;
 end
 ;;

@@ -36,7 +36,7 @@
         select count(*) from knowledgepoint;
     </select>
     <select id="maxKpid" resultType="java.lang.Integer">
-        select max(kpid) from knowledgepoint;
+        select ifnull(max(kpid), -1) from knowledgepoint;
     </select>
     <select id="getKpidByName" resultType="java.lang.Integer">
         select kpid from knowledgepoint where knowledgepoint=#{kp};

@@ -37,10 +37,10 @@
     });
 
     function login() {
-        var account = $("#account").val().toString();
-        var pwd = $("#pwd").val().toString();
+        let account = $("#account").val().toString();
+        let pwd = $("#pwd").val().toString();
         pwd = pwd.MD5(32);
-        var data = {
+        let data = {
             "name": account,
             "pwd": pwd
         };

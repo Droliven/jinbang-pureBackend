@@ -11,4 +11,6 @@ public interface Item_kpMapper {
     int deleteItem_kpByIid(int iid);
     int deleteItem_kpByKpidAndIid(int kpid, int iid);
     List<Item_kp> getItem_kpByIid(int iid);
+    List<Item_kp> getItem_kpByKpid(int kpid);
+    Item_kp getItem_kpByIidAndKpid(int iid, int kpid);
 }
