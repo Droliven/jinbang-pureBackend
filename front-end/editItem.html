@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<!--编辑页-->
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>chooseItem</title>
+    <link rel="stylesheet" href="./layui/css/layui.css">
+    <link rel="stylesheet" href="./css/editor.css">
+    <script type="text/javascript" src="./js/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="./js/jquery.cookie.js"></script>
+</head>
+
+<body class="layui-layout-body">
+
+    <script src="./layui/layui.js"></script>
+
+    <!--富文本编辑器-->
+    <div class="demonstration"><span>试题正文</span></div>
+    <div id="question" class="editor"></div>
+    <div class="demonstration"><span>答案正文</span></div>
+    <div id="answer" class="editor"></div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button id="btn1" class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+
+    <!--富文本编辑器引用！必须放在最后！！！-->
+    <!-- @module wangeditor-->
+    <script src="wangeditor/release/wangEditor.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="wangeditor/release/wangEditor.min.css" />
+    <script>
+        // 获取当前题目
+        $(document).ready(function() {
+            console.log("edit.html");
+            if (!window.localStorage) {
+                alert("您的浏览器不支持Localstorage！");
+                window.history.go(-1);
+            } else if (!window.localStorage.question) {
+                // 当前没有收到消息
+                alert("查询错误！");
+                window.location.href = "https://www.baidu.com";
+            } else {
+                var txt = "<p>";
+                var txtend = "</p>";
+                $("#question").append(txt + window.localStorage.question + txtend);
+                $("#answer").append(txt + window.localStorage.answer + txtend);
+            }
+        })
+
+        // 创建富文本编辑器
+        // editor1
+        var E = window.wangEditor;
+        var editor1 = new E('#question');
+        editor1.create();
+
+        // editor2
+        var E = window.wangEditor;
+        var editor2 = new E('#answer');
+        editor2.create();
+    </script>
+
+</body>
+
+</html>
