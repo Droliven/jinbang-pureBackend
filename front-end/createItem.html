@@ -40,8 +40,8 @@
         </div>
         <div class="layui-form-item">
             <div class="layui-input-block">
-                <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
-                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                <button type="button" class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                <button type="button" id="reset" type="reset" class="layui-btn layui-btn-primary">重置</button>
             </div>
         </div>
     </form>
@@ -61,7 +61,8 @@
     <script>
         //JavaScript代码区域
         // 创建富文本编辑器
-
+        // var domin = "http://localhost:8081/jinbang/";
+        var domin = "http://11pm.top:8081/jinbang/";
         // editor1
         var E = window.wangEditor;
         var editor1 = new E('#question');
@@ -72,6 +73,33 @@
         var editor2 = new E('#answer');
         editor2.create();
         console.log("create.html");
+
+        function a111(event) {
+            if ($("#select6").val()) {
+                var para1 = {
+                    "path": $("#select6").val()
+                }
+                console.log(typeof(para1));
+                $.ajax({
+                    type: 'POST',
+                    data: para1,
+                    url: domin + "addKpByPath",
+                    dataType: 'JSON',
+            xhrFields: {
+                    withCredentials: true
+                },
+                    success: function(data) {
+                        if (data.Err == "Not Logged!") {
+                            alert("请登录！");
+                            window.location.href("index.htlm");
+                        }
+                    },
+                    xhrFields: {
+                        withCredentials: true
+                    }
+                })
+            }
+        }
 
         layui.use(['element', 'jquery', 'form'], function() {
             let element = layui.element;
@@ -86,7 +114,7 @@
                 // 获取表单头
                 $.ajax({
                     type: "GET",
-                    url: "http://39.108.76.111:8081/jinbang/itemradio",
+                    url: domin + "itemradio",
                     xhrFields: {
                         withCredentials: true
                     },
@@ -112,8 +140,12 @@
                                     temp.attr("title", item);
                                     // console.log(temp);
                                     $("#types-div").append(temp);
-                                })
-                                // $("#types-div input:first-child").attr("checked", true);
+                                });
+                                var temp = $(inputStr);
+                                temp.attr("name", "type");
+                                temp.attr("value", "新类型");
+                                temp.attr("title", "新类型");
+                                $("#types-div").append(temp);
                                 sources.forEach(function(item) {
                                     let temp = $(inputStr);
                                     temp.attr("name", "source");
@@ -121,8 +153,12 @@
                                     temp.attr("title", item);
                                     // console.log(temp);
                                     $("#sources-div").append(temp);
-                                })
-                                // $("#sources-div input:first-child").attr("checked", true);
+                                });
+                                var temp1 = $(inputStr);
+                                temp1.attr("name", "source");
+                                temp1.attr("value", "新类型");
+                                temp1.attr("title", "新类型");
+                                $("#sources-div").append(temp1);
                                 grades.forEach(function(item) {
                                     let temp = $(inputStr);
                                     temp.attr("name", "grade");
@@ -131,7 +167,11 @@
                                     // console.log(temp);
                                     $("#grades-div").append(temp);
                                 });
-                                // $("#grades-div input:first-child").attr("checked", true);
+                                var temp2 = $(inputStr);
+                                temp2.attr("name", "grade");
+                                temp2.attr("value", "新类型");
+                                temp2.attr("title", "新类型");
+                                $("#grades-div").append(temp2);
                                 names.forEach(function(item) {
                                     let temp = $(inputStr);
                                     temp.attr("name", "name");
@@ -139,31 +179,40 @@
                                     temp.attr("title", item);
                                     // console.log(temp);
                                     $("#names-div").append(temp);
-                                })
-                                // $("#names-div input:first-child").attr("checked", true);
+                                });
+                                var temp3 = $(inputStr);
+                                temp3.attr("name", "name");
+                                temp3.attr("value", "新类型");
+                                temp3.attr("title", "新类型");
+                                $("#names-div").append(temp3);
+                                var temp4 = $(inputStr);
+                                temp4.attr("name", "groupDiv");
+                                temp4.attr("value", "新类型");
+                                temp4.attr("title", "添加新知识点（以/区分各级别）");
+                                $("#groupDiv").append(temp4);
 
                                 // 添加新类型
                                 var temp = $(inputStr);
-                                //temp.attr("type", "radio");
-                                temp.attr("name", "new-grade");
+                                temp.attr("type", "textarea");
+                                temp.attr("name", "newgrade");
                                 temp.attr("value", "");
                                 temp.attr("class", "layui-input layui-form-danger");
-                                temp.attr("style", "width:100px; display: inline-block;");
+                                temp.attr("style", "width:100px; display: inline-block; margin-top: 2px; margin-bottom: 6px; padding-bottom:2px");
                                 temp.attr("placeholder", "添加新类型");
-                                temp.attr("lay-verify", "required");
-                                temp.attr("autocomlete", "off");
+                                // temp.attr("lay-verify", "required");
+                                // temp.attr("autocomlete", "off");
                                 $("#grades-div").append(temp);
 
                                 var temp1 = temp.clone(true);
-                                temp1.attr("name", "new-type");
+                                temp1.attr("name", "newtype");
                                 $("#types-div").append(temp1);
 
                                 var temp2 = temp.clone(true);
-                                temp2.attr("name", "new-source");
+                                temp2.attr("name", "newsource");
                                 $("#sources-div").append(temp2);
 
                                 var temp3 = temp.clone(true);
-                                temp3.attr("name", "new-name");
+                                temp3.attr("name", "newname");
                                 $("#names-div").append(temp3);
 
                                 // 先设置级联下拉选择器的第一层
@@ -177,11 +226,38 @@
                                     $("#select1").append(temp);
                                 }
 
+                                var temp4 = temp.clone(true);
+                                temp4.attr("name", "select");
+                                temp4.attr("id", "select6")
+                                $("#groupDiv").append(temp4);
+
+                                $("#groupDiv").append("<input type='button'onclick='a111()' id='goto' class='layui-btn' value='修改路径'></input>");
                                 form.render();
                             }
                         }
                     }
                 })
+            })
+
+            $("#goto").on('click', function() {
+                console.log("hel");
+                if ($("#select6").val() == "新类型") {
+                    var para1 = {
+                        "path": $("#select6").val()
+                    }
+                    console.log(para1);
+                    // $.ajax({
+                    //     data: para1,
+                    //     url: "http://localhost:8081/jinbang/addKpByPath",
+                    //     dataType: 'JSON',
+                    //     success: function(data) {
+                    //         if (data.FailResponse == "Not Logged!") {
+                    //             alert("请登录！");
+                    //             window.location.href("index.htlm");
+                    //         }
+                    //     }
+                    // })
+                }
             })
 
             // 通过结点名，获取子树数组
@@ -337,8 +413,25 @@
                 form.render();
             })
 
+            $("#reset").on("click", function() {
+                editor1.txt.clear();
+                editor2.txt.clear();
+            })
+
             form.on('submit(formDemo)', function(data) {
                 layer.msg(JSON.stringify(data.field));
+                if (data.field.grade == "新类型") {
+                    data.field.grade = data.field.newgrade;
+                }
+                if (data.field.source == "新类型") {
+                    data.field.source = data.field.newsource;
+                }
+                if (data.field.type == "新类型") {
+                    data.field.type = data.field.newtype;
+                }
+                if (data.field.name == "新类型") {
+                    data.field.name = data.field.newname;
+                }
                 var para = {
                     "answer": {
                         "asrid": 0,
@@ -371,17 +464,22 @@
                         "uid": 1
                     }
                 };
-                console.log(para);
+                //para = JSON.parse(para);
+                //console.log(JSON.parse(para));
                 $.ajax({
                     // 数据传输
                     type: "POST",
-                    url: "http://39.108.76.111:8081/jinbang/addItemFully",
+                    url: domin + "addItemFully",
                     data: para,
+                    dataType: 'JSON',
+            xhrFields: {
+                    withCredentials: true
+                },
                     success: function(data) {
                         if (data.readyState == 200) {
-                            var msg = confirm("Edit Fully!");
                             if (msg) {
-                                window.location.href = "http://www.baidu.com";
+                                console.log("jfai")
+                                    //window.location.reload();
                             }
                         } else {
                             console.log(data.readyState);

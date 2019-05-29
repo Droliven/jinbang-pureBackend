@@ -55,7 +55,7 @@ public class ItemController {
 //    }
 
     @GetMapping("/itemradio")
-    public ResponseEntity<Map<String,Object>> itemradio(HttpServletRequest request, HttpSession session){
+    public ResponseEntity<Map<String,Object>> itemradio(HttpSession session){
         Map<String, Object> map = new HashMap<String, Object>();
         if(session.getAttribute("name")!=null){
 //            // 打印 cookie
@@ -75,28 +75,25 @@ public class ItemController {
     }
 
     @PostMapping("/itemchoose")
-    public ResponseEntity<Map<String,Object>> itemchoose(HttpServletRequest request, HttpSession session) {
+    public ResponseEntity<Map<String,Object>> itemchoose(@RequestBody JSONObject request, HttpSession session) {
         Map<String, Object> map = new HashMap<String, Object>();
         if(session.getAttribute("name")!=null){
-            String type = request.getParameter("type");
-//            System.out.println("controller type: " + type);
-            String grade = request.getParameter("grade");
-            String source = request.getParameter("source");
-            String name = request.getParameter("name");
-            if(type == null){
-                type = "";
+            String type = "", grade = "", source = "", name = "";
+            if(request.get("type") != null){
+                type = request.get("type").toString();
             }
-            if(grade == null){
-                grade = "";
+            if(request.get("grade") != null){
+                grade = request.get("grade").toString();
             }
-            if(source == null){
-                source = "";
+            if(request.get("source") != null){
+                source = request.get("source").toString();
             }
-            if(name == null){
-                name = "";
+            if(request.get("name") != null){
+                name = request.get("name").toString();
             }
-            String path = request.getParameter("path");
-            if(!path.equals("")){
+//
+            if(!(request.get("path") == null || request.get("path").equals(""))){
+                String path = request.get("path").toString();
                 System.out.println("controller path: " + path);
                 String [] pathssplit = path.split("/");
                 String kp = pathssplit[pathssplit.length-1];
@@ -104,6 +101,7 @@ public class ItemController {
                 List<Item_Asr_Usr_IK_Kp> item_asr_usr_ik_kps = itemService.itemchoose(type, grade, source, name, kp);
                 map.put("itemchooses", item_asr_usr_ik_kps);
             } else {
+                String path = "";
 //                System.out.println("path is empty");
                 List<Item_Asr_Usr_IK_Kp> item_asr_usr_ik_kps = itemService.itemchoose(type, grade, source, name, path);
                 map.put("itemchooses", item_asr_usr_ik_kps);
@@ -150,11 +148,11 @@ public class ItemController {
 //    }
 
     @DeleteMapping ("/itemDeleteByIids")
-    public ResponseEntity<JSONObject> itemDeleteByIids(HttpServletRequest request, HttpSession session){
+    public ResponseEntity<JSONObject> itemDeleteByIids(@RequestBody JSONObject jsonparam, HttpSession session){
         if(session.getAttribute("name")!=null){
             // 直接将json信息打印出来
 //            System.out.println(request.getParameter("iids").toString());
-            JSONArray reqArray = JSON.parseArray(request.getParameter("iids").toString());
+            JSONArray reqArray = JSON.parseArray(jsonparam.get("iids").toString());
 //            System.out.println(jsonArray.toString());
             JSONObject jsonObject = itemService.itemDeleteByIids(reqArray);
             return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.OK);
@@ -166,9 +164,9 @@ public class ItemController {
     }
 
     @RequestMapping("/getRestBranch")
-    public ResponseEntity<JSONArray> getRestBranch(HttpServletRequest request, HttpSession session){
+    public ResponseEntity<JSONArray> getRestBranch(@RequestBody JSONObject jsonparam, HttpSession session){
         if(session.getAttribute("name")!=null){
-            String node = request.getParameter("node");
+            String node = jsonparam.get("node").toString();
             JSONArray jsonArray = kpPathService.getRestBranch(node);
             return new ResponseEntity<JSONArray>(jsonArray, HttpStatus.OK);
         } else {
@@ -179,9 +177,10 @@ public class ItemController {
     }
 
     @PostMapping("/addKpByPath")
-    public ResponseEntity<String> addKpByPath(@RequestBody JSONObject jsonParam, HttpSession session) {
+    public ResponseEntity<String> addKpByPath(@RequestBody JSONObject jsonparam, HttpSession session) {
         if(session.getAttribute("name")!=null){
-            String path = jsonParam.get("path").toString();
+            String path = jsonparam.get("path").toString();;
+            System.out.println("path: " + path);
             kpPathService.addKpByPath(path);
             return new ResponseEntity<String>("Knowledgepoints Added!", HttpStatus.OK);
         } else {
@@ -190,29 +189,29 @@ public class ItemController {
     }
 
     @PostMapping ("/editItemFully")
-    public ResponseEntity<JSONObject> editItemFully(@RequestBody JSONObject jsonParam, HttpSession session){
+    public ResponseEntity<JSONObject> editItemFully(@RequestBody JSONObject jsonparam, HttpSession session){
         if(session.getAttribute("name")!=null){
-            itemService.editItemFully(jsonParam);
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("Success!", "Edit fully!");
-            return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.OK);
-        } else {
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("Err!", "Not Logged!");
-            return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.BAD_REQUEST);
+                itemService.editItemFully(jsonparam);
+                JSONObject jsres = new JSONObject();
+                jsres.put("Success", "Edit fully");
+                return new ResponseEntity<JSONObject>(jsres, HttpStatus.OK);
+            } else {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("Err", "NotLogged");
+                return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.BAD_REQUEST);
         }
     }
 
     @PostMapping("/addItemFully")
-    public ResponseEntity<JSONObject> addItemFully(@RequestBody JSONObject jsonParam, HttpSession session){
-        if(session.getAttribute("name")!=null){
-            itemService.addItemFully(jsonParam);
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("Success!", "Add fully!");
-            return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.OK);
+    public ResponseEntity<JSONObject> addItemFully(@RequestBody JSONObject jsonparam, HttpSession session){
+        if(session.getAttribute("name") != null){
+            itemService.addItemFully(jsonparam);
+            JSONObject resp = new JSONObject();
+            resp.put("Success", "Addfully");
+            return new ResponseEntity<JSONObject>(resp, HttpStatus.OK);
         } else {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("Err!", "Not Logged!");
+            jsonObject.put("Err", "NotLogged");
             return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.BAD_REQUEST);
         }
     }

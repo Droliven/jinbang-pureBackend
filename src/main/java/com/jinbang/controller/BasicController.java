@@ -1,5 +1,6 @@
 package com.jinbang.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.jinbang.mapper.UserMapper;
 import com.jinbang.model.Item_Asr_Usr_IK_Kp;
 import com.jinbang.model.User;
@@ -32,16 +33,16 @@ public class BasicController {
         return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
     }
     @PostMapping("/home")
-    public ResponseEntity<Map<String,Object>> signinPost(HttpServletRequest request, HttpSession session){
+    public ResponseEntity<Map<String,Object>> signinPost(@RequestBody JSONObject request, HttpSession session){
         Map<String, Object> map = new HashMap<String, Object>();
-        String name = request.getParameter("name");
+        String name = request.get("name").toString();
         User userDB = userMapper.loadByUserName(name);
         if(userDB != null){
 //            String pwdDB = DigestUtils.md5DigestAsHex(userDB.getPwd().getBytes());
             String pwdDB = userDB.getPwd();
 //            System.out.println("user.getPwd() " + user.getPwd());
 //            System.out.println("pwdDB " + pwdDB);
-            if(pwdDB.equals(request.getParameter("pwd"))){
+            if(pwdDB.equals(request.get("pwd").toString())){
                 System.out.println(name + " 密码正确登录成功");
                 // 写入 session
                 session.setAttribute("name", name);

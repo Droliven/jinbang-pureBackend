@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>查看试卷</title>
+    <link rel="stylesheet" href="./layui/css/layui.css">
+    <link rel="stylesheet" href="./css/editor.css">
+    <script type="text/javascript" src="./js/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="./js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="./layui/lay/modules/layer.js"></script>
+    <link rel="stylesheet" href="./layui/css/modules/layer/default/layer.css">
+    <script type="text/javascript" src="js/FileSaver.js"></script>
+    <script type="text/javascript" src="js/jquery.wordexport.js"></script>
+    <script>
+        //
+        // var domin = "http://localhost:8081/jinbang/";
+        var domin = "http://11pm.top:8081/jinbang/";
+        
+        var paper; // 全局变量
+        $.ajax({
+            type: "GET",
+            url: domin + "getAllPaperDetail",
+            xhrFields: {
+                    withCredentials: true
+                },
+            success: function(data) {
+                console.log(data);
+                if (data.Err == "NotLogged") {
+                    alert("请登录！");
+                    window.location.href("index.html");
+                } else if (data) {
+                
+                    paper = data;
+                } else {
+                    console.log("Wrong");
+                }
+            }
+        })
+    </script>
+</head>
+
+<body>
+    <div>
+        <input id="search" type="text" style="display:inline-block; width: auto; font-size:18px; padding-bottom: 6px" placeholder="搜索试卷" value class="layui-input">
+        <button class="layui-btn" style="padding: 0; width:60px" lay-submit lay-filter="formDemo">搜索</button>
+        <input id="getword" class="layui-btn" type="button" value="导出word">
+        <div class="word">
+            <p id="examtitle" align="center" style="font-size:20pt;font-weight:bold;">试卷</p>
+        </div>
+    </div>
+    <script src="./layui/layui.js"></script>
+    <script>
+        // 显示试卷内容
+        function getPaper(data) {
+            data.forEach(function(item) {
+                var txt1 = "<p>";
+                var txt2 = "</p>";
+                $(".word").append(txt1 + item.item.content + txt2);
+                $(".word").append(txt1 + item.answer.content + txt2);
+                $(".word").append("<br>");
+            })
+        }
+
+
+        $(function() {
+            $("#getword").click(function(event) {
+                $(".word").wordExport($("#exmatitle").val());
+            });
+        })
+
+        layui.use('layer', function() {
+            var layer = layui.layer; // 引入layer
+            $(".layui-btn").click(function() {
+                var para = $("#search").val();
+                if (!para) {
+                    // 未输入搜索内容
+                    console.log("no");
+                    layer.msg("请输入搜索内容！");
+                } else {
+                    console.log(para);
+                    var list = [];
+                    var flag = 0;
+                    var cont = [];
+                    list = paper.allPaperDetail; // 所有题目列表
+                    list.forEach(function(item) {
+                        if (para == item.title) {
+                            flag = 1;
+                            cont = item.buildpapers;
+                            $("#examtitle").text(item.title);
+                            getPaper(cont);
+                        }
+                    })
+                    if (flag == 0) {
+                        layer.msg("没有符合条件的试卷！");
+                        $("#search").val() = "";
+                    }
+                }
+            })
+        });
+    </script>
+</body>
+
+</html>

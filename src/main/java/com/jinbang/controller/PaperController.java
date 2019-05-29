@@ -15,7 +15,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.Map;
 
 @Controller
@@ -24,13 +27,12 @@ public class PaperController {
     PaperService paperService;
 
     @PostMapping("/createEmptyPaper")
-    public ResponseEntity<String> createEmptyPaper(HttpSession session, @RequestBody JSONObject jsonParam){
-        if(session.getAttribute("name")!=null){
-            // 直接将json信息打印出来
-            paperService.createEmptyPaper(jsonParam);
-            return new ResponseEntity<String>("Success", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<String>("NotLogged", HttpStatus.BAD_REQUEST);
+    public ResponseEntity<String> createEmptyPaper(HttpSession session, @RequestBody JSONObject request){
+        if(session.getAttribute("name") != null){
+            paperService.createEmptyPaper(request);
+                return new ResponseEntity<String>("Success", HttpStatus.OK);
+            } else {
+                return new ResponseEntity<String>("NotLogged", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -47,7 +49,8 @@ public class PaperController {
 
     @RequestMapping("/getAllPaperDetail")
     public ResponseEntity<JSONObject> getAllPaperDetail(HttpSession session){
-        if(session.getAttribute("name")!=null){
+        System.out.println("查看试卷");
+        if(session.getAttribute("name") != null){
             JSONArray allPaperAndBuildpapers = paperService.getAllPaperDetail();
             JSONObject rep = new JSONObject();
             rep.put("allPaperDetail", allPaperAndBuildpapers);

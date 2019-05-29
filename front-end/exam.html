@@ -1,13 +1,16 @@
 <!DOCTYPE html>
-<html>
+<html style="overflow-y: scroll">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>chooseItem</title>
+    <title>create paper</title>
     <link rel="stylesheet" href="layui/css/layui.css">
     <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
     <script type="text/javascript" src="js/jquery.cookie.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.js"></script>
+    <script type="text/javascript" src="js/FileSaver.js"></script>
+    <script type="text/javascript" src="js/jquery.wordexport.js"></script>
 </head>
 
 <body class="layui-layout-body">
@@ -57,15 +60,63 @@
     </script>
 
     <script type="text/html" id="rowEdit">
-        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-xs" lay-event="edit">添加</a>
         <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
     </script>
 
+    <input id="getword" class="layui-btn" type="button" value="导出word">
+    <input id="gopaper" class="layui-btn" type="button" value="上传试卷">
+    <input id="newpaper" class="layui-btn" type="button" value="新建空白试卷">
+    <input id="papertitle" class="layui-input" style="padding:5px;width:auto; display:inline-block" type="textarea" value="试卷1">
+
+    <div class="word">
+        <p id="examtitle" align="center" style="font-size:20pt;font-weight:bold;">试卷</p>
+    </div>
 
     <script src="layui/layui.js"></script>
     <script>
         // var domin = "http://localhost:8081/jinbang/";
         var domin = "http://11pm.top:8081/jinbang/";
+        // 导出word
+        $(function() {
+            $("#newpaper").click(function() {
+                let dataReq = {
+                    "title": $("#papertitle").val(),
+                    "name": localStorage.getItem("name")
+                };
+
+                $.ajax({
+                    type: "post",
+                    url: domin + "createEmptyPaper",
+                    dataType: 'JSON',
+                    data: JSON.stringify(dataReq),
+                    contentType : "application/json",
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    success: function(data) {
+                        console.log(data);
+                        if (data == "NotLogged") {
+                            alert("请登录!");
+                            window.location.href("index.html");
+                        } else if (data == "Success") {
+                            alert("成功！");
+                            $("#exametitle").text($("#papertitle").val());
+                        }
+                    },
+                    error: function(data){
+                        console.log("ajax 失败回调");
+                        // window.location.href='index.html';
+                    }
+                })
+            })
+        })
+
+        $(function() {
+            $("#getword").click(function(event) {
+                $(".word").wordExport($("#exmatitle").val());
+            });
+        })
 
         layui.use(['element', 'jquery', 'form', 'table'], function() {
             let element = layui.element;
@@ -158,7 +209,7 @@
                                 form.render();
                             }
                         }
-                    },
+                    }, 
                     error: function(){
                         console.log("ajax 失败回调");
                     }
@@ -454,7 +505,6 @@
                                     // console.log(tableDataPre);
                                     tableData.push(tableDataPre);
                                 }
-                                // console.log(tableData);
                                 table.reload("items", {
                                     data: tableData
                                 })
@@ -469,28 +519,9 @@
                 return false;
             });
 
-            // 赋值已知数据
-
-            // // 获取选定行数据
-            // var checkStatus = table.checkStatus('idTest'); //idTest 即为基础参数 id 对应的值
-            // console.log(checkStatus.data) //获取选中行的数据
-            // console.log(checkStatus.data.length) //获取选中行数量，可作为是否有选中行的条件
-            // console.log(checkStatus.isAll ) //表格是否全选
-            // console.log(table);
-            // console.log(table.cache.items);
-            // table.reload("items", {
-            //     data: [{
-            //         "iid": "10001"
-            //         ,"grade": "王维"
-            //         ,"source": "xianxin@layui.com"
-            //         ,"type": "男"
-            //         ,"name": "浙江杭州"
-            //         ,"item": "人生恰似一场修行"
-            //         ,"answer": "116"
-            //     }]
-            // })
-
             // 题目行工具条
+            var editing = 0;
+            var paperlist = [];
             table.on('tool(items)', function(obj) {
                 //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
                 // console.log(obj);
@@ -500,101 +531,77 @@
 
                 if (layEvent === 'del') { //删除
                     // console.log("删除");
-                    layer.confirm('删除后不可恢复！是否确认？', function(index) {
-                        obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
-                        layer.close(index);
-                        //向服务端发送删除指令
-                        // console.log(data);
-                        $.ajax({
-                            type: "DELETE",
-                            url: domin + "itemDeleteByIids",
-                            dataType: 'JSON',
-                            data: {
-                                "iids": "[" + data.iid.toString() + "]"
-                                    // "iids": iidsList
-                            },
-                            xhrFields: {
-                                withCredentials: true
-                            },
-                            success: function(data) {
-                                console.log(data);
-                            }
-                        });
-                    });
-                } else if (layEvent === 'edit') { //编辑
-                    // 存入 localStorage
-                    let editingIid = data.iid;
-                    let grade = data.grade;
-                    let source = data.source;
-                    let type = data.type;
-                    let name = data.name
-                    let reqData = {
-                        grade,
-                        source,
-                        type,
-                        name
-                    };
-
-                    // 请求该题目的详细信息，并保存
-                    $.ajax({
-                        type: "POST",
-                        data: JSON.stringify(reqData),
-                        url: domin + "itemchoose",
-                        xhrFields: {
-                            withCredentials: true
-                        },
-                        dataType: "JSON",
-                        contentType : "application/json",
-                        success: function(data) {
-                            localStorage.setItem("editingitem", JSON.stringify(data.itemchooses[0]));
-                            handleFatherSrc();
-                        },
-                        error: function(){
-                            
+                    $("#cont").each(function() {
+                        console.log($("#u").html());
+                        console.log(data.item);
+                        if ($("#u").text() == data.item) {
+                            $(this).remove();
+                            console.log("fjia");
                         }
                     })
+                } else if (layEvent === 'edit') { //编辑
+                    // 存入 localStorage
+                    localStorage.setItem("editingitem", JSON.stringify(data));
+                    var con = $.parseJSON(localStorage.editingitem);
+                    // console.log(con.item);
+                    $(".word").append("<div id='cont'></div>");
+                    let e = "#cont"; //+ editing;
+                    $(e).append("<p id='u'>" + con.item + "</p>");
+                    $(e).append("<p>" + con.answer + "</p>");
+                    $(e).append("<p>来自：" + con.grade + "  年级：" + con.source + "</p>");
+                    $(e).append("<br>");
+                    editing = editing + 1;
+                    let examid = {
+                        "iid": con.iid,
+                        "itemorder": editing,
+                        "score": 5,
+                        "timemin": 5
+                    }
+                    examid = JSON.stringify(examid);
+                    examid = $.parseJSON(examid);
+                    console.log(typeof(examid));
+                    paperlist.push(examid);
+                    localStorage.setItem("exam", JSON.stringify(paperlist));
                 }
             });
-
-            function handleFatherSrc() {
-                $("#subPage", window.parent.document).attr("src", "editItem.html");
-            }
 
             //监听表格复选框选择
             table.on('checkbox(items)', function(obj) {
                 console.log(obj)
             });
 
-            // //头工具栏事件
-            // table.on('toolbar(items)', function(obj){
-            //     var checkStatus = table.checkStatus(obj.config.id);
-            //     switch(obj.event){
-            //         case 'delCheckData':
-            //             var data = checkStatus.data;
-            //             var iidsList = [];
-            //             for(let i = 0; i < data.length; i++){
-            //                 // console.log(data[i].iid);
-            //                 iidsList.push(data[i].iid);
-            //             }
-            //             console.log(iidsList);
-            //             // 开始删除
-            //
-            //             // layer.alert(JSON.stringify(data));
-            //             break;
-            //         // case 'getCheckLength':
-            //         //     var data = checkStatus.data;
-            //         //     layer.msg('选中了：'+ data.length + ' 个');
-            //         //     break;
-            //         // case 'isAll':
-            //         //     layer.msg(checkStatus.isAll ? '全选': '未全选');
-            //         //     break;
-            //     };
-            // });
-
             $('.demoTable .layui-btn').on('click', function() {
                 var type = $(this).data('type');
                 active[type] ? active[type].call(this) : '';
             });
+
+            $(function() {
+                $("#gopaper").click(function(event) {
+                    var para = {
+                        "pid": 1,
+                        "items": $.parseJSON(localStorage.exam)
+                    };
+                    console.log(para);
+                    $.ajax({
+                        type: "post",
+                        data: para,
+                        url: domin + "buildPaper",
+            xhrFields: {
+                    withCredentials: true
+                },
+                        success: function(data) {
+                            console.log(data);
+                            if (data.SuccessResponse == "Success") {
+                                alert("组成试卷成功");
+                                window.location.reload();
+                            } else if (data.FailResponse == "NotLogged") {
+                                alert("请登录！");
+                                window.location.href("index.html");
+                            }
+                        }
+                    })
+                })
+            })
 
         });
     </script>

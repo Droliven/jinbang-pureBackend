@@ -1,0 +1,62 @@
+{
+  "old": {
+    "answer": {
+      "asrid": 5,
+      "content": "A"
+    },
+    "item": {
+      "asrid": 5,
+      "content":"清华大学的虞昊教授致力于第三代照明技术——LED灯的普及工作。LED灯的能耗小，造价低廉，使用寿命长.虞昊自制的LED台灯，用电压为6伏的电源供电，正常工作电流为300毫安。那么，此LED台灯正常工作时的功率为(  ). 
+<br/> A．1.8瓦\tB．18瓦\tC．180瓦\tD．1800瓦",
+"difficulty": 5,
+      "grade": "初中二年级",
+      "iid": 5,
+      "source": "21世纪教育在线题库",
+      "type": "选择",
+      "uid": 3
+    },
+    "knowledgepoints": [
+      {
+        "depth": 3,
+        "knowledgepoint": "电功与电热",
+        "kpid": 11,
+        "prepoint": 10
+      }
+    ],
+    "user": {
+      "authority": "录入组卷员",
+      "name": "翠花",
+      "uid": 3
+    }
+  },
+  "new": {
+    "answer": {
+      "asrid": 5,
+      "content": "A"
+    },
+    "item": {
+      "asrid": 5,
+      "content":"清华大学的虞昊教授致力于第三代照明技术——LED灯的普及工作。LED灯的能耗小，造价低廉，使用寿命长.虞昊自制的LED台灯，用电压为6伏的电源供电，正常工作电流为300毫安。那么，此LED台灯正常工作时的功率为(  ). 
+<br/> A．1.8瓦\tB．18瓦\tC．180瓦\tD．1800瓦",
+"difficulty": 5,
+      "grade": "初中二年级",
+      "iid": 5,
+      "source": "21世纪教育在线题库",
+      "type": "选择",
+      "uid": 3
+    },
+    "knowledgepoints": [
+      {
+        "depth": 3,
+        "knowledgepoint": "电功与电热",
+        "kpid": 11,
+        "prepoint": 10
+      }
+    ],
+    "user": {
+      "authority": "录入组卷员",
+      "name": "翠花",
+      "uid": 3
+    }
+  }
+}

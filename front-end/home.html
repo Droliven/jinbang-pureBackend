@@ -56,8 +56,8 @@
                     <li class="layui-nav-item layui-nav-itemed">
                         <a href="javascript:;" title="试卷"><i class="layui-icon layui-icon-user"></i><cite>试卷</cite></a>
                         <dl class="layui-nav-child">
-                            <dd><a href="javascript:;" lay-href="https://www.aliyun.com">查看试卷</a></dd>
-                            <dd><a href="javascript:;" lay-href="https://www.layui.com">创建试卷</a></dd>
+                            <dd><a href="javascript:;" lay-href="paper.html">查看试卷</a></dd>
+                            <dd><a href="javascript:;" lay-href="exam.html">创建试卷</a></dd>
                         </dl>
                     </li>
                 </ul>
@@ -65,7 +65,7 @@
         </div>
         <!--正文-->
         <div class="layui-body layui-bg-gray">
-                <iframe id="subPage" src="https://www.layui.com" width="100%" height="100%" frameborder="0" style="margin: 10px">
+            <iframe id="subPage" src="https://www.layui.com" width="100%" height="100%" frameborder="0" style="margin: 10px">
                     您的浏览器不支持iframe，请升级
                 </iframe>
             <!-- 选项卡
@@ -84,6 +84,9 @@
     </div>
     <script src="layui/layui.js"></script>
     <script>
+        // var domin = "http://localhost:8081/jinbang/";
+        var domin = "http://11pm.top:8081/jinbang/";
+        
         layui.use(['element', 'layer'], function() {
             let element = layui.element,
                 layer = layui.layer,
@@ -109,7 +112,7 @@
                     // console.log("jfdaifjaiooi")
                     $.ajax({
                         type: "GET",
-                        url: "http://39.108.76.111:8081/jinbang/signout",
+                        url: domin + "signout",
                         xhrFields: {
                             withCredentials: true
                         },
@@ -125,61 +128,61 @@
                         }
                     });
                 })
-            //     //隐藏tab主页关闭标签
-            // $(".layui-tab-title li:first-child i:last-child").css("display", "none");
-            // // tab切换时，左侧菜单对应选中
-            // element.on('tab(pagetabs)', function(data) {
-            //     // tab切换时，左侧菜单对应选中
-            //     // 左侧导航区 lay-href 与 iframe tab 的 lay-id 匹配
-            //     var url = $(this).attr("lay-id");
-            //     $(".layui-nav-tree li dd").each(function(i, e) {
-            //         if ($(this).find("a").attr("lay-href") == url) {
-            //             $(this).attr("class", "layui-this");
-            //         } else {
-            //             $(this).attr("class", "");
-            //         }
-            //     })
-            // });
-            // //顶部左侧菜单监控
-            // element.on('nav(leftmenu)', function(elem) {
-            //     //隐藏显示侧边菜单
-            //     if (elem[0].className == "hidetab") { //隐藏
-            //         //侧边菜单伸缩
-            //         $(".layui-side-menu").animate({
-            //             width: $(".layui-side-menu").width() - 144 + "px"
-            //         });
-            //         //正文伸缩
-            //         $(".layui-body").animate({
-            //             left: $(".layui-body").position().left - 144 + "px"
-            //         });
-            //         //底部伸缩
-            //         $(".layui-footer").animate({
-            //             left: $(".layui-footer").position().left - 144 + "px"
-            //         });
-            //         $(this).attr("class", "showtab");
-            //         $(this).find("i").attr("class", "layui-icon layui-icon-spread-left");
-            //         //侧边菜单只显示图标
-            //         $(".layui-nav-tree").find("li").each(function(em, ind) {
-            //             $(this).find("cite").css("display", "none");
-            //             $(this).find("dl").css("display", "none");
-            //         });
-            //     } else if (elem[0].className == "showtab") { //显示
-            //         $(".layui-side-menu").animate({
-            //             width: $(".layui-side-menu").width() + 144 + "px"
-            //         });
-            //         $(".layui-body").animate({
-            //             left: $(".layui-body").position().left + 144 + "px"
-            //         });
-            //         $(".layui-footer").animate({
-            //             left: $(".layui-footer").position().left + 144 + "px"
-            //         });
-            //         $(this).attr("class", "hidetab");
-            //         $(this).find("i").attr("class", "layui-icon layui-icon-shrink-right");
-            //         $(".layui-nav-tree").find("li").each(function(em, ind) {
-            //             $(this).find("cite").css("display", "");
-            //             $(this).find("dl").css("display", "");
-            //         });
-            //     } else {
+                //     //隐藏tab主页关闭标签
+                // $(".layui-tab-title li:first-child i:last-child").css("display", "none");
+                // // tab切换时，左侧菜单对应选中
+                // element.on('tab(pagetabs)', function(data) {
+                //     // tab切换时，左侧菜单对应选中
+                //     // 左侧导航区 lay-href 与 iframe tab 的 lay-id 匹配
+                //     var url = $(this).attr("lay-id");
+                //     $(".layui-nav-tree li dd").each(function(i, e) {
+                //         if ($(this).find("a").attr("lay-href") == url) {
+                //             $(this).attr("class", "layui-this");
+                //         } else {
+                //             $(this).attr("class", "");
+                //         }
+                //     })
+                // });
+                // //顶部左侧菜单监控
+                // element.on('nav(leftmenu)', function(elem) {
+                //     //隐藏显示侧边菜单
+                //     if (elem[0].className == "hidetab") { //隐藏
+                //         //侧边菜单伸缩
+                //         $(".layui-side-menu").animate({
+                //             width: $(".layui-side-menu").width() - 144 + "px"
+                //         });
+                //         //正文伸缩
+                //         $(".layui-body").animate({
+                //             left: $(".layui-body").position().left - 144 + "px"
+                //         });
+                //         //底部伸缩
+                //         $(".layui-footer").animate({
+                //             left: $(".layui-footer").position().left - 144 + "px"
+                //         });
+                //         $(this).attr("class", "showtab");
+                //         $(this).find("i").attr("class", "layui-icon layui-icon-spread-left");
+                //         //侧边菜单只显示图标
+                //         $(".layui-nav-tree").find("li").each(function(em, ind) {
+                //             $(this).find("cite").css("display", "none");
+                //             $(this).find("dl").css("display", "none");
+                //         });
+                //     } else if (elem[0].className == "showtab") { //显示
+                //         $(".layui-side-menu").animate({
+                //             width: $(".layui-side-menu").width() + 144 + "px"
+                //         });
+                //         $(".layui-body").animate({
+                //             left: $(".layui-body").position().left + 144 + "px"
+                //         });
+                //         $(".layui-footer").animate({
+                //             left: $(".layui-footer").position().left + 144 + "px"
+                //         });
+                //         $(this).attr("class", "hidetab");
+                //         $(this).find("i").attr("class", "layui-icon layui-icon-shrink-right");
+                //         $(".layui-nav-tree").find("li").each(function(em, ind) {
+                //             $(this).find("cite").css("display", "");
+                //             $(this).find("dl").css("display", "");
+                //         });
+                //     } else {
 
             //     }
             // });
@@ -247,28 +250,40 @@
                         //         flag = false;
                         //     }
                         // })
-                        switch(url){
-                            case "chooseItem.html" : {
-                                $("#subPage").attr("src", "chooseItem.html");
-                                break;
-                            }
-                            case "createItem.html" : {
-                                $("#subPage").attr("src", "createItem.html");
-                                break;
-                            }
+                        switch (url) {
+                            case "chooseItem.html":
+                                {
+                                    $("#subPage").attr("src", "chooseItem.html");
+                                    break;
+                                }
+                            case "createItem.html":
+                                {
+                                    $("#subPage").attr("src", "createItem.html");
+                                    break;
+                                }
+                            case "paper.html":
+                                {
+                                    $("#subPage").attr("src", "paper.html");
+                                    break;
+                                }
+                            case "exam.html":
+                                {
+                                    $("#subPage").attr("src", "exam.html");
+                                    break;
+                                }
                         }
                         // if (url == "chooseItem.html") {                            
-                            // //新增选项卡
-                            // element.tabAdd('pagetabs', {
-                            //     title: elem[0].innerText
-                            //         // ,content: '<iframe src="'+url+'" class="layui-admin-iframe" scrolling="auto" frameborder="0" onload="setIframeHeight(this)"></iframe>'
-                            //         ,
-                            //     content: '<iframe src="' + url + '" class="layui-admin-iframe" scrolling="auto" frameborder="0" style="width:100%;height:99%;""></iframe>',
-                            //     id: url
-                            // });
-                            // //切换选项卡
-                            // element.tabChange('pagetabs', url);
-                            // FrameWH();
+                        // //新增选项卡
+                        // element.tabAdd('pagetabs', {
+                        //     title: elem[0].innerText
+                        //         // ,content: '<iframe src="'+url+'" class="layui-admin-iframe" scrolling="auto" frameborder="0" onload="setIframeHeight(this)"></iframe>'
+                        //         ,
+                        //     content: '<iframe src="' + url + '" class="layui-admin-iframe" scrolling="auto" frameborder="0" style="width:100%;height:99%;""></iframe>',
+                        //     id: url
+                        // });
+                        // //切换选项卡
+                        // element.tabChange('pagetabs', url);
+                        // FrameWH();
                         // }
                     }
                 }
