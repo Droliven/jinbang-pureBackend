@@ -29,4 +29,7 @@
     <insert id="addPaperQuick">
         insert into paper(pid, title, uid) values(#{pid}, #{title},  #{uid});
     </insert>
+    <select id="getPidByTitle" resultType="java.lang.Integer">
+        select pid from paper where title=#{title};
+    </select>
 </mapper>

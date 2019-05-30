@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 import java.util.Map;
 
 @Controller
@@ -27,12 +28,15 @@ public class PaperController {
     PaperService paperService;
 
     @PostMapping("/createEmptyPaper")
-    public ResponseEntity<String> createEmptyPaper(HttpSession session, @RequestBody JSONObject request){
+    public ResponseEntity<HashMap<String, Integer>> createEmptyPaper(HttpSession session, @RequestBody JSONObject request){
+        HashMap<String, Integer> rslt = new HashMap<>();
         if(session.getAttribute("name") != null){
-            paperService.createEmptyPaper(request);
-                return new ResponseEntity<String>("Success", HttpStatus.OK);
-            } else {
-                return new ResponseEntity<String>("NotLogged", HttpStatus.BAD_REQUEST);
+            int pid = paperService.createEmptyPaper(request);
+            rslt.put("pid", pid);
+            return new ResponseEntity<HashMap<String, Integer>>(rslt, HttpStatus.OK);
+        } else {
+            rslt.put("NotLogged", -1);
+            return new ResponseEntity<HashMap<String, Integer>>(rslt, HttpStatus.BAD_REQUEST);
         }
     }
 

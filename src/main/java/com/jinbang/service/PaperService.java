@@ -38,7 +38,7 @@ public class PaperService {
      * }
      * @return
      */
-    public void createEmptyPaper(JSONObject jsonParam){
+    public int createEmptyPaper(JSONObject jsonParam){
         System.out.println("jsonParam: " + jsonParam.toString());
         String title = jsonParam.get("title").toString();
         String name = jsonParam.get("name").toString();
@@ -49,7 +49,7 @@ public class PaperService {
         }
 //        System.out.println("maxPid: " + maxPid);
         int rslt = paperMapper.addPaperQuick(maxPid+1, title, uid);
-        System.out.println(rslt);
+        return maxPid+1;
     }
 
     /**
