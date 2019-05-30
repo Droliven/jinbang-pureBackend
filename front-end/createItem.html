@@ -82,20 +82,22 @@
                 console.log(typeof(para1));
                 $.ajax({
                     type: 'POST',
-                    data: para1,
                     url: domin + "addKpByPath",
                     dataType: 'JSON',
-            xhrFields: {
-                    withCredentials: true
-                },
+                    data: JSON.stringify(para1),
+                    contentType : "application/json",
+                    xhrFields: {
+                        withCredentials: true
+                    },
                     success: function(data) {
-                        if (data.Err == "Not Logged!") {
+                        if (data == "Not Logged!") {
                             alert("请登录！");
                             window.location.href("index.htlm");
                         }
                     },
-                    xhrFields: {
-                        withCredentials: true
+                    error: function(data){
+                        console.log("ajax 失败回调");
+                        // window.location.href='index.html';
                     }
                 })
             }
@@ -109,12 +111,21 @@
             let paths;
             // 获取选项
             var itemradio;
-            $(document).ready(function() {
+
+            // 获取选项
+            function init() {
+                // 清空级联器
+                $("#select1").empty();
+                $("#select1").append($('<option value="">--请选择--</option>'));
+                $("#selectDiv2").empty();
+                $("#selectDiv2").empty();
+
                 jQuery.support.cors = true;
                 // 获取表单头
                 $.ajax({
                     type: "GET",
                     url: domin + "itemradio",
+                    contentType : "application/json",
                     xhrFields: {
                         withCredentials: true
                     },
@@ -235,8 +246,18 @@
                                 form.render();
                             }
                         }
+                    },
+                    error: function(data){
+                        console.log("ajax 失败回调");
+                        // window.location.href='index.html';
                     }
                 })
+            }
+
+            
+
+            $(document).ready(function() {
+                init();
             })
 
             $("#goto").on('click', function() {
@@ -416,10 +437,18 @@
             $("#reset").on("click", function() {
                 editor1.txt.clear();
                 editor2.txt.clear();
+                // init();
             })
 
             form.on('submit(formDemo)', function(data) {
-                layer.msg(JSON.stringify(data.field));
+                // console.log(JSON.stringify(data.field));
+                // console.log(data.field.grade);
+
+                const gradeFromData = data.field.grade;
+                const sourceFromData = data.field.source;
+                const typeFromData = data.field.type;
+                const nameFromData = data.field.name;
+
                 if (data.field.grade == "新类型") {
                     data.field.grade = data.field.newgrade;
                 }
@@ -432,63 +461,68 @@
                 if (data.field.name == "新类型") {
                     data.field.name = data.field.newname;
                 }
-                var para = {
-                    "answer": {
-                        "asrid": 0,
-                        "content": editor2.txt.text()
-                    },
-                    "item": {
-                        "asrid": 0,
-                        "content": editor1.txt.text(),
-                        "difficulty": 5,
-                        "grade": data.field.grade,
-                        "iid": 0,
-                        "source": data.field.source,
-                        "type": data.field.type,
-                        "uid": 1
-                    },
-                    "item_kps": [{
-                        "degree": 5,
-                        "iid": 2,
-                        "kpid": 5
-                    }],
-                    "knowledgepoints": [{
-                        "depth": 3,
-                        "knowledgepoint": data.field.select3,
-                        "kpid": 5,
-                        "prepoint": 4
-                    }],
-                    "user": {
-                        "authority": "录入组卷员",
-                        "name": data.field.name,
-                        "uid": 1
-                    }
+                var para = {};
+                para.answer = {
+                    "asrid": 0,
+                    "content": editor2.txt.text()
                 };
-                //para = JSON.parse(para);
-                //console.log(JSON.parse(para));
+                para.item = {
+                    "asrid": 0,
+                    "content": editor1.txt.text(),
+                    "difficulty": 5,
+                    "grade": data.field.grade,
+                    "iid": 0,
+                    "source": data.field.source,
+                    "type": data.field.type,
+                    "uid": 1
+                };
+                para.knowledgepoints = [{
+                    "depth": 3,
+                    "knowledgepoint": data.field.select2,
+                    "kpid": 5,
+                    "prepoint": 4
+                }];
+                para.user = {
+                    "authority": "录入组卷员",
+                    "name": data.field.name,
+                    "uid": 1
+                };
+                para = JSON.stringify(para);
+                console.log(para);
+                console.log(data.field.select2);
+                
                 $.ajax({
                     // 数据传输
                     type: "POST",
                     url: domin + "addItemFully",
                     data: para,
                     dataType: 'JSON',
-            xhrFields: {
-                    withCredentials: true
-                },
+                    contentType : "application/json",
+                    xhrFields: {
+                            withCredentials: true
+                    },
                     success: function(data) {
-                        if (data.readyState == 200) {
+                        if (data.Success == "Addfully") {
+                            var msg = confirm("添加成功！");
                             if (msg) {
                                 console.log("jfai")
-                                    //window.location.reload();
+                                //window.location.reload();
+                                $("#subPage", window.parent.document).attr("src", "chooseItem.html");
+                                
                             }
                         } else {
-                            console.log(data.readyState);
+                            console.log("编辑失败");
                         }
+                    },
+                    error: function(data){
+                        console.log("ajax 失败回调");
+                        // window.location.href='index.html';
                     }
                 })
                 return false;
             });
         });
+    
     </script>
 
     <script>

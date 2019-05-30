@@ -60,22 +60,17 @@
     <script src="./layui/layui.js"></script>
     <script>
         //JavaScript代码区域
-
         // var domin = "http://localhost:8081/jinbang/";
         var domin = "http://11pm.top:8081/jinbang/";
-
         // 创建富文本编辑器
-
         var E = window.wangEditor;
         var editor1 = new E('#question');
         editor1.create();
-
         // editor2
         var E = window.wangEditor;
         var editor2 = new E('#answer');
         editor2.create();
         console.log("create.html");
-
         // 添加文本内容
         var text1 = "<p>";
         var text2 = "</p>";
@@ -85,7 +80,6 @@
         var nameOpt = con.user.name;
         var typeOpt = con.item.type;
         var pathOpt = con.kPPath;
-
         function a111(event) {
             if ($("#select6").val()) {
                 var para1 = {
@@ -99,10 +93,10 @@
                     data: JSON.stringify(para1),
                     contentType : "application/json",
                     xhrFields: {
-                            withCredentials: true
+                        withCredentials: true
                     },
                     success: function(data) {
-                        if (data.FailResponse == "Not Logged!") {
+                        if (data == "Not Logged!") {
                             alert("请登录！");
                             window.location.href("index.htlm");
                         }
@@ -114,7 +108,6 @@
                 })
             }
         }
-
         if (localStorage.editingitem == undefined) {
             alert("查询错误！");
             window.location.reload();
@@ -127,11 +120,11 @@
             let element = layui.element;
             let form = layui.form;
             let $ = layui.jquery;
-
             let paths;
             // 获取选项
             var itemradio;
             $(document).ready(function() {
+                
                 // jQuery.support.cors = true;
                 // 获取表单头
                 $.ajax({
@@ -206,7 +199,6 @@
                                 temp2.attr("value", "新类型");
                                 temp2.attr("title", "新类型");
                                 $("#grades-div").append(temp2);
-
                                 names.forEach(function(item) {
                                     let temp = $(inputStr);
                                     temp.attr("name", "name");
@@ -223,13 +215,11 @@
                                 temp3.attr("value", "新类型");
                                 temp3.attr("title", "新类型");
                                 $("#names-div").append(temp3);
-
                                 var temp4 = $(inputStr);
                                 temp4.attr("name", "groupDiv");
                                 temp4.attr("value", "新类型");
                                 temp4.attr("title", "添加新知识点（以'/'区分各级别）");
                                 $("#groupDiv").append(temp4);
-
                                 // 添加新类型
                                 var temp = $(inputStr);
                                 temp.attr("type", "textarea");
@@ -241,22 +231,17 @@
                                 // temp.attr("lay-verify", "required");
                                 // temp.attr("autocomlete", "off");
                                 $("#grades-div").append(temp);
-
                                 var temp1 = temp.clone(true);
                                 temp1.attr("name", "newtype");
                                 $("#types-div").append(temp1);
-
                                 var temp2 = temp.clone(true);
                                 temp2.attr("name", "newsource");
                                 $("#sources-div").append(temp2);
-
                                 var temp3 = temp.clone(true);
                                 temp3.attr("name", "newname");
                                 $("#names-div").append(temp3);
-
                                 // 先设置级联下拉选择器的第一层
                                 // let firsrPastOpt = pathOpt.split("/")[0];
-
                                 let optionStr = '<option value="">--请选择--</option>';
                                 // console.log(typeof paths);
                                 for (let i = 0; i < paths.length; i++) {
@@ -266,7 +251,6 @@
                                     // console.log(temp);
                                     $("#select1").append(temp);
                                 }
-
                                 var temp4 = temp.clone(true);
                                 temp4.attr("name", "select");
                                 temp4.attr("id", "select6")
@@ -282,7 +266,6 @@
                     }
                 })
             })
-
             // 通过结点名，获取子树数组
             function getSubStrByNode(fullPath, node, flag) {
                 var subArr;
@@ -320,7 +303,6 @@
                     return subArr;
                 }
             }
-
             // 多级联动下拉框
             form.on('select(select1)', function(data) {
                 // console.log('select(select1): ' + data.value);
@@ -349,7 +331,6 @@
                 }
                 form.render();
             })
-
             // 多级联动下拉框
             form.on('select(select2)', function(data) {
                 // console.log('select(select2): ' + data.value);
@@ -376,10 +357,8 @@
                     temp.attr("value", subKeys[key]);
                     $("#select3").append(temp);
                 }
-
                 form.render();
             })
-
             // 多级联动下拉框
             form.on('select(select3)', function(data) {
                 // console.log('select(select3): ' + data.value);
@@ -408,7 +387,6 @@
                 }
                 form.render();
             })
-
             form.on('select(select4)', function(data) {
                 // console.log('select(select3): ' + data.value);
                 // 获取子树
@@ -436,14 +414,21 @@
                 }
                 form.render();
             })
-
             $("#reset").on("click", function() {
                 editor1.txt.clear();
                 editor2.txt.clear();
             })
 
             form.on('submit(formDemo)', function(data) {
-                layer.msg(JSON.stringify(data.field));
+                // console.log(JSON.stringify(data.field));
+                // console.log(data.field.grade);
+
+                const gradeFromData = data.field.grade;
+                const sourceFromData = data.field.source;
+                const typeFromData = data.field.type;
+                const nameFromData = data.field.name;
+
+                // layer.msg(JSON.stringify(data.field));
                 if (data.field.grade = "新类型") {
                     data.field.grade = data.field.newgrade;
                 }
@@ -456,6 +441,7 @@
                 if (data.field.name = "新类型") {
                     data.field.name = data.field.newname;
                 }
+
                 var para = {};
                 para.old = {};
                 // console.log(con.item);
@@ -463,7 +449,6 @@
                 para.old.answer = con.answer;
                 para.old.user = con.user;
                 para.old.knowledgepoints = con.knowledgepoints;
-
                 para.new = {
                     "answer": {
                         "asrid": para.old.answer.asrid,
@@ -473,46 +458,42 @@
                         "asrid": para.old.answer.asrid,
                         "content": editor1.txt.text(),
                         "difficulty": 5,
-                        "grade": data.field.grade,
+                        "grade": gradeFromData,
                         "iid": para.old.item.iid,
-                        "source": data.field.source,
-                        "type": data.field.type,
+                        "source": sourceFromData,
+                        "type": typeFromData,
                         "uid": para.old.user.uid,
                     },
-                    "knowledgepoints": [{
-                        "depth": 3,
-                        "knowledgepoint": data.field.select3,
-                        "kpid": 5,
-                        "prepoint": 4
-                    }],
+                    "knowledgepoints": para.old.knowledgepoints,
                     "user": {
                         "authority": para.old.user.authority,
-                        "name": data.field.name,
+                        "name": nameFromData,
                         "uid": para.old.user.uid
                     }
                 };
                 
-                // console.log($.parseJSON(para));
-                //para = $.parseJSON(para);
+                console.log(JSON.stringify(para));
+                para = JSON.stringify(para);
                 $.ajax({
                     // 数据传输
                     type: "POST",
                     url: domin + "editItemFully",
                     dataType: 'JSON',
-                    data: JSON.stringify(para),
+                    data: para,
                     contentType : "application/json",
                     xhrFields: {
                             withCredentials: true
                     },
                     success: function(data) {
-                        if (data.readyState == 200) {
-                            var msg = confirm("Edit Fully!");
+                        if (data.Success == "Edit fully") {
+                            var msg = confirm("编辑成功！");
                             if (msg) {
                                 localStorage.removeItem('editingitem');
-                                window.location.reload();
+                                // window.location.reload();
+                                $("#subPage", window.parent.document).attr("src", "chooseItem.html");
                             }
                         } else {
-                            console.log(data.readyState);
+                            console.log("编辑失败");
                         }
                     },
                     error: function(data){

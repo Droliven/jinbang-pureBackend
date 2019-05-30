@@ -249,6 +249,8 @@ public class ItemService {
         // 需要注意的是，本函数是在修改 题目，答案，关联的知识点 id, 并不真正修改 knowledgepoint, 以及 path
         // 对 knowledgepoint, 以及 path 的修改是在 用户点击 多级下拉框选择的时候编辑的
         // 由于 kp 可能发生 断链重连，所以旧的 kpid 不可信，只有 kp 才是可信的，所以需要前端传入旧的 kp
+        System.out.print("oldAndNewItem_Asr_Usr_IK_Kp: ");
+        System.out.println(oldAndNewItem_Asr_Usr_IK_Kp.toString());
 
         // 首先帮前端开发者 check id, 相信旧的数据是对的
         int iid, asrid, oldKpid, newKpid, uid;
@@ -256,11 +258,12 @@ public class ItemService {
         asrid = (int) JSONPath.eval(oldAndNewItem_Asr_Usr_IK_Kp, "$.old.answer.asrid");
         uid = (int) JSONPath.eval(oldAndNewItem_Asr_Usr_IK_Kp, "$.old.user.uid");
 
-        // 插入顺序 answer, item, item_kp
-        JSONPath.set(oldAndNewItem_Asr_Usr_IK_Kp, "$.new.item.iid", iid);
-        JSONPath.set(oldAndNewItem_Asr_Usr_IK_Kp, "$.new.item.asrid", asrid);
-        JSONPath.set(oldAndNewItem_Asr_Usr_IK_Kp, "$.new.answer.asrid", asrid);
-        JSONPath.set(oldAndNewItem_Asr_Usr_IK_Kp, "$.new.item.uid", uid);
+//        // 插入顺序 answer, item, item_kp
+//        JSONPath.set(oldAndNewItem_Asr_Usr_IK_Kp, "$.new.item.iid", iid);
+//        JSONPath.set(oldAndNewItem_Asr_Usr_IK_Kp, "$.new.item.asrid", asrid);
+//        JSONPath.set(oldAndNewItem_Asr_Usr_IK_Kp, "$.new.answer.asrid", asrid);
+//        JSONPath.set(oldAndNewItem_Asr_Usr_IK_Kp, "$.new.item.uid", uid);
+
         // 再修改数据
         JSONObject itemJson = JSON.parseObject(JSONPath.eval(oldAndNewItem_Asr_Usr_IK_Kp, "$.new.item").toString());
         Item item = (Item) JSONObject.toJavaObject(itemJson, Item.class);
@@ -316,7 +319,7 @@ public class ItemService {
         // 如何查重：主要判断 iContent
         String iContent = JSONPath.eval(item_Asr_Usr_IK_Kp, "$.item.content").toString();
         List<Item> iExists = itemMapper.getItemLikeContent(iContent);
-        if(iExists != null){
+        if(iExists.size() != 0){
             return;
         }
 
@@ -328,6 +331,7 @@ public class ItemService {
         asrid = answerMapper.maxAsrid() + 1;
         JSONPath.set(item_Asr_Usr_IK_Kp, "$.item.iid", iid);
         JSONPath.set(item_Asr_Usr_IK_Kp, "$.item.uid", uid);
+        JSONPath.set(item_Asr_Usr_IK_Kp, "$.item.asrid", asrid);
         JSONPath.set(item_Asr_Usr_IK_Kp, "$.answer.asrid", asrid);
 
         // 构造 Pojo
