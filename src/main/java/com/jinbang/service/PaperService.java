@@ -5,10 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.jinbang.mapper.*;
-import com.jinbang.model.Answer;
-import com.jinbang.model.Buildpaper;
-import com.jinbang.model.Item;
-import com.jinbang.model.Paper;
+import com.jinbang.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +21,7 @@ public class PaperService {
     @Autowired
     BuildpaperMapper buildpaperMapper;
     @Autowired
-    UserMapper userMapper;
+    ShiroUserMapper userMapper;
     @Autowired
     ItemMapper itemMapper;
     @Autowired

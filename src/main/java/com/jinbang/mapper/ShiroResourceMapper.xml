@@ -1,0 +1,13 @@
+<?xmloadByRscidl version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinbang.mapper.ShiroResourceMapper">
+    <select id="loadByRscid" resultType="com.jinbang.model.ShiroResource">
+        select * from shiro_resource where rscid=#{rscid};
+    </select>
+    <select id="getResourceByRscid" resultType="java.lang.String">
+        select resource from shiro_resource where rscid=#{rscid};
+    </select>
+    <select id="getall" resultType="com.jinbang.model.ShiroResource">
+        select * from shiro_resource;
+    </select>
+</mapper>

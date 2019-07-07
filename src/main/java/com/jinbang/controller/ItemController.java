@@ -5,24 +5,14 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jinbang.mapper.ItemMapper;
 import com.jinbang.mapper.KnowledgePointMapper;
-import com.jinbang.mapper.UserMapper;
+import com.jinbang.mapper.ShiroUserMapper;
 import com.jinbang.model.Item_Asr_Usr_IK_Kp;
 import com.jinbang.service.ItemService;
 import com.jinbang.service.KPPathService;
-import com.sun.net.httpserver.HttpsParameters;
-import jdk.nashorn.internal.ir.Symbol;
-import org.apache.ibatis.annotations.Param;
-import org.omg.CORBA.PUBLIC_MEMBER;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,185 +24,181 @@ public class ItemController {
     @Autowired
     ItemMapper itemMapper;
     @Autowired
-    UserMapper userMapper;
+    ShiroUserMapper userMapper;
     @Autowired
     KnowledgePointMapper knowledgePointMapper;
     @Autowired
     KPPathService kpPathService;
 
-//    @GetMapping("/itemall")
-//    public ResponseEntity<Map<String,Object>> itemall(HttpSession session) {
-//        Map<String, Object> map = new HashMap<String, Object>();
-//        if(session.getAttribute("name")!=null){
-//            List<Item_Asr_Usr_IK_Kp> item_asr_usr_ik_kps;
-//            item_asr_usr_ik_kps = itemService.itemall();
-//            map.put("itemall", item_asr_usr_ik_kps);
-//            return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
-//        } else {
-//            map.put("err", "Not Logged!");
-//            return new ResponseEntity<Map<String,Object>>(map, HttpStatus.BAD_REQUEST);
-//        }
-//    }
-
     @GetMapping("/itemradio")
-    public ResponseEntity<Map<String,Object>> itemradio(HttpSession session){
+    public Map<String,Object> itemradio(@RequestBody JSONObject request, HttpSession session){
         Map<String, Object> map = new HashMap<String, Object>();
-        if(session.getAttribute("name")!=null){
-//            // 打印 cookie
-//            Cookie[] cookies = request.getCookies();
-//            if (cookies != null && cookies.length > 0) {
-//                for (Cookie cookie : cookies) {
-//                    System.out.println(cookie.getName() + " : " + cookie.getValue());
-//                }
-//            }
+        String clientsession = request.get("session").toString();
+        String name = clientsession.split(",")[0];
+        if(session.getAttribute(name) != null){
+            // 业务代码
+            System.out.println("itemradio");
             List<HashMap> itemlist = itemService.itemradio();
-            map.put("itemradio", itemlist);
-            return new ResponseEntity<>(map, HttpStatus.OK);
+
+            String serverSession = name + "," + System.currentTimeMillis();
+            session.setAttribute(name, serverSession);
+            map.put("data", itemlist);
+            map.put("state", "success");
+            map.put("session", serverSession);
         } else {
-            map.put("err", "Not Logged!");
-            return new ResponseEntity<Map<String,Object>>(map, HttpStatus.BAD_REQUEST);
+            map.put("state", "err");
         }
+        return map;
     }
 
     @PostMapping("/itemchoose")
-    public ResponseEntity<Map<String,Object>> itemchoose(@RequestBody JSONObject request, HttpSession session) {
+    public Map<String,Object> itemchoose(@RequestBody JSONObject request, HttpSession session){
         Map<String, Object> map = new HashMap<String, Object>();
-        if(session.getAttribute("name")!=null){
-            String type = "", grade = "", source = "", name = "";
-            if(request.get("type") != null){
-                type = request.get("type").toString();
+        JSONObject data = JSON.parseObject(request.get("data").toString());
+        String clientsession = request.get("session").toString();
+        String name = clientsession.split(",")[0];
+        if(session.getAttribute(name) != null){
+            System.out.println("itemchoose");
+
+            String type = "", grade = "", source = "", dataname = "";
+            if(data.get("type") != null){
+                type = data.get("type").toString();
             }
-            if(request.get("grade") != null){
-                grade = request.get("grade").toString();
+            if(data.get("grade") != null){
+                grade = data.get("grade").toString();
             }
-            if(request.get("source") != null){
-                source = request.get("source").toString();
+            if(data.get("source") != null){
+                source = data.get("source").toString();
             }
-            if(request.get("name") != null){
-                name = request.get("name").toString();
+            if(data.get("name") != null){
+                dataname = data.get("name").toString();
             }
-//
-            if(!(request.get("path") == null || request.get("path").equals(""))){
-                String path = request.get("path").toString();
+            if(!(data.get("path") == null || data.get("path").equals(""))){
+                String path = data.get("path").toString();
                 System.out.println("controller path: " + path);
                 String [] pathssplit = path.split("/");
                 String kp = pathssplit[pathssplit.length-1];
                 System.out.println("controller kp: " + kp);
-                List<Item_Asr_Usr_IK_Kp> item_asr_usr_ik_kps = itemService.itemchoose(type, grade, source, name, kp);
-                map.put("itemchooses", item_asr_usr_ik_kps);
+                List<Item_Asr_Usr_IK_Kp> item_asr_usr_ik_kps = itemService.itemchoose(type, grade, source, dataname, kp);
+                map.put("data", item_asr_usr_ik_kps);
             } else {
                 String path = "";
-//                System.out.println("path is empty");
                 List<Item_Asr_Usr_IK_Kp> item_asr_usr_ik_kps = itemService.itemchoose(type, grade, source, name, path);
-                map.put("itemchooses", item_asr_usr_ik_kps);
+                map.put("data", item_asr_usr_ik_kps);
             }
-//        System.out.println("type: " + type + ", grade: " + grade + ", source: " + source + ", name: " + name);
-            return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+            String serverSession = name + "," + System.currentTimeMillis();
+            session.setAttribute(name, serverSession);
+            map.put("state", "success");
+            map.put("session", serverSession);
         } else {
-            map.put("err", "Not Logged!");
-            return new ResponseEntity<Map<String,Object>>(map, HttpStatus.BAD_REQUEST);
+            map.put("state", "err");
         }
+        return map;
     }
 
-    //    @DeleteMapping ("/itemDeleteByIids")
-//    public ResponseEntity<JSONObject> itemDeleteByIids(HttpServletRequest request, HttpSession session){
-//        if(session.getAttribute("name")!=null){
-//            JSONArray jsonArray = JSON.parseArray(request.getParameter("iids").toString());
-//            JSONObject jsonObject = itemService.itemDeleteByIids(jsonArray);
-//            return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.OK);
-//        } else {
-//            JSONObject jsonObject = new JSONObject();
-//            jsonObject.put("err", "Not Logged!");
-//            return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.BAD_REQUEST);
-//        }
-//    }
-//    @DeleteMapping ("/itemDeleteByIids")
-//    public JSONObject itemDeleteByIids(HttpServletRequest request){
-//        JSONObject jsonParam = null;
-//        try {
-//            // 获取输入流
-//            BufferedReader streamReader = new BufferedReader(new InputStreamReader(request.getInputStream(), "UTF-8"));
-//            // 写入数据到Stringbuilder
-//            StringBuilder sb = new StringBuilder();
-//            String line = null;
-//            while ((line = streamReader.readLine()) != null) {
-//                sb.append(line);
-//            }
-//            jsonParam = JSONObject.parseObject(sb.toString());
-//            // 直接将json信息打印出来
-//            System.out.println(jsonParam.toJSONString());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return jsonParam;
-//    }
-
     @DeleteMapping ("/itemDeleteByIids")
-    public ResponseEntity<JSONObject> itemDeleteByIids(@RequestBody JSONObject jsonparam, HttpSession session){
-        if(session.getAttribute("name")!=null){
-            // 直接将json信息打印出来
-//            System.out.println(request.getParameter("iids").toString());
-            JSONArray reqArray = JSON.parseArray(jsonparam.get("iids").toString());
-//            System.out.println(jsonArray.toString());
+    public Map<String,Object> itemDeleteByIids(@RequestBody JSONObject request, HttpSession session){
+        Map<String, Object> map = new HashMap<String, Object>();
+        JSONObject data = JSON.parseObject(request.get("data").toString());
+        String clientsession = request.get("session").toString();
+        String name = clientsession.split(",")[0];
+        if(session.getAttribute(name) != null){
+            System.out.println("itemDeleteByIids");
+            JSONArray reqArray = JSON.parseArray(data.get("iids").toString());
             JSONObject jsonObject = itemService.itemDeleteByIids(reqArray);
-            return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.OK);
+
+            String serverSession = name + "," + System.currentTimeMillis();
+            session.setAttribute(name, serverSession);
+            map.put("data", jsonObject);
+            map.put("state", "success");
+            map.put("session", serverSession);
         } else {
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("err", "Not Logged!");
-            return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.BAD_REQUEST);
+            map.put("state", "err");
         }
+        return map;
     }
 
     @RequestMapping("/getRestBranch")
-    public ResponseEntity<JSONArray> getRestBranch(@RequestBody JSONObject jsonparam, HttpSession session){
-        if(session.getAttribute("name")!=null){
-            String node = jsonparam.get("node").toString();
+    public Map<String,Object> getRestBranch(@RequestBody JSONObject request, HttpSession session){
+        Map<String, Object> map = new HashMap<String, Object>();
+        JSONObject data = JSON.parseObject(request.get("data").toString());
+        String clientsession = request.get("session").toString();
+        String name = clientsession.split(",")[0];
+        if(session.getAttribute(name) != null){
+            String node = data.get("node").toString();
             JSONArray jsonArray = kpPathService.getRestBranch(node);
-            return new ResponseEntity<JSONArray>(jsonArray, HttpStatus.OK);
+            System.out.println("getRestBranch");
+
+            String serverSession = name + "," + System.currentTimeMillis();
+            session.setAttribute(name, serverSession);
+            map.put("data", jsonArray);
+            map.put("state", "success");
+            map.put("session", serverSession);
         } else {
-            JSONArray jsonArray = new JSONArray();
-            jsonArray.add("Not Logged!");
-            return new ResponseEntity<JSONArray>(jsonArray, HttpStatus.BAD_REQUEST);
+            map.put("state", "err");
         }
+        return map;
     }
 
     @PostMapping("/addKpByPath")
-    public ResponseEntity<String> addKpByPath(@RequestBody JSONObject jsonparam, HttpSession session) {
-        if(session.getAttribute("name")!=null){
-            String path = jsonparam.get("path").toString();;
+    public Map<String,Object> addKpByPath(@RequestBody JSONObject request, HttpSession session) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        JSONObject data = JSON.parseObject(request.get("data").toString());
+        String clientsession = request.get("session").toString();
+        String name = clientsession.split(",")[0];
+        if(session.getAttribute(name) != null){
+            String path = data.get("path").toString();;
             System.out.println("path: " + path);
             kpPathService.addKpByPath(path);
-            return new ResponseEntity<String>("Knowledgepoints Added!", HttpStatus.OK);
+            System.out.println("addKpByPath");
+
+            String serverSession = name + "," + System.currentTimeMillis();
+            session.setAttribute(name, serverSession);
+            map.put("state", "success");
+            map.put("session", serverSession);
         } else {
-            return new ResponseEntity<String>("Not Logged!", HttpStatus.BAD_REQUEST);
+            map.put("state", "err");
         }
+        return map;
     }
 
     @PostMapping ("/editItemFully")
-    public ResponseEntity<JSONObject> editItemFully(@RequestBody JSONObject jsonparam, HttpSession session){
-        if(session.getAttribute("name")!=null){
-                itemService.editItemFully(jsonparam);
-                JSONObject jsres = new JSONObject();
-                jsres.put("Success", "Edit fully");
-                return new ResponseEntity<JSONObject>(jsres, HttpStatus.OK);
-            } else {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("Err", "NotLogged");
-                return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.BAD_REQUEST);
+    public Map<String,Object> editItemFully(@RequestBody JSONObject request, HttpSession session){
+        Map<String, Object> map = new HashMap<String, Object>();
+        JSONObject data = JSON.parseObject(request.get("data").toString());
+        String clientsession = request.get("session").toString();
+        String name = clientsession.split(",")[0];
+        if(session.getAttribute(name) != null){
+            itemService.editItemFully(data);
+            System.out.println("editItemFully");
+
+            String serverSession = name + "," + System.currentTimeMillis();
+            session.setAttribute(name, serverSession);
+            map.put("state", "success");
+            map.put("session", serverSession);
+        } else {
+            map.put("state", "err");
         }
+        return map;
     }
 
     @PostMapping("/addItemFully")
-    public ResponseEntity<JSONObject> addItemFully(@RequestBody JSONObject jsonparam, HttpSession session){
-        if(session.getAttribute("name") != null){
-            itemService.addItemFully(jsonparam);
-            JSONObject resp = new JSONObject();
-            resp.put("Success", "Addfully");
-            return new ResponseEntity<JSONObject>(resp, HttpStatus.OK);
+    public Map<String,Object> addItemFully(@RequestBody JSONObject request, HttpSession session) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        JSONObject data = JSON.parseObject(request.get("data").toString());
+        String clientsession = request.get("session").toString();
+        String name = clientsession.split(",")[0];
+        if (session.getAttribute(name) != null) {
+            System.out.println("addItemFully");
+            itemService.addItemFully(data);
+
+            String serverSession = name + "," + System.currentTimeMillis();
+            session.setAttribute(name, serverSession);
+            map.put("state", "success");
+            map.put("session", serverSession);
         } else {
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("Err", "NotLogged");
-            return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.BAD_REQUEST);
+            map.put("state", "err");
         }
+        return map;
     }
 }

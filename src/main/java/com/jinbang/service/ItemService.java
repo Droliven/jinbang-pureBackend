@@ -18,7 +18,7 @@ public class ItemService {
     @Autowired
     AnswerMapper answerMapper;
     @Autowired
-    UserMapper userMapper;
+    ShiroUserMapper userMapper;
     @Autowired
     Item_kpMapper item_kpMapper;
     @Autowired
@@ -179,7 +179,7 @@ public class ItemService {
                     List<Item_kp> item_kps = new ArrayList<>();
                     item_kps.add(item_kp);
                     Item_Asr_Usr_IK_Kp item_asr_usr_ik_kp = new Item_Asr_Usr_IK_Kp();
-                    User user = userMapper.getUserById(item.getUid());
+                    ShiroUser user = userMapper.getUserById(item.getUid());
                     Answer answer = answerMapper.getAnswerById(item.getAsrid());
                     List<Knowledgepoint> knowledgepoints = new ArrayList<>();
                     Knowledgepoint knowledgepointSQL = knowledgePointMapper.getKpById(kpid);
@@ -199,7 +199,7 @@ public class ItemService {
                 if (item_kps != null) {
                     // 符合条件
                     Item_Asr_Usr_IK_Kp item_asr_usr_ik_kp = new Item_Asr_Usr_IK_Kp();
-                    User user = userMapper.getUserById(item.getUid());
+                    ShiroUser user = userMapper.getUserById(item.getUid());
                     Answer answer = answerMapper.getAnswerById(item.getAsrid());
                     List<Knowledgepoint> knowledgepoints = new ArrayList<>();
                     for (Item_kp item_kpitem : item_kps) {

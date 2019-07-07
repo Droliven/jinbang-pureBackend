@@ -1,79 +1,103 @@
 package com.jinbang.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.jinbang.mapper.UserMapper;
-import com.jinbang.model.Item_Asr_Usr_IK_Kp;
-import com.jinbang.model.User;
+import com.jinbang.mapper.ShiroRoleMapper;
+import com.jinbang.mapper.ShiroUserMapper;
+import com.jinbang.model.ShiroUser;
+import com.jinbang.model.User_Roles_Rscs;
 import com.jinbang.service.ItemService;
+import com.jinbang.service.ShiroService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
-import java.util.logging.Logger;
+import java.util.Set;
 
 @RestController
 public class BasicController {
     @Autowired
-    UserMapper userMapper;
+    ShiroUserMapper shiroUserMapper;
+
     @Autowired
     ItemService itemService;
+    @Autowired
+    ShiroService shiroService;
+    @Autowired
+    ShiroRoleMapper shiroRoleMapper;
 
-    @RequestMapping("/")
-    public ResponseEntity<Map<String,Object>> cover(){
+    @GetMapping("/registradio")
+    public Map<String,Object> regist (@RequestBody JSONObject request){
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("success", "index page");
-        return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+        Set<String> roles = new HashSet<String>(shiroRoleMapper.getall());
+        map.put("data", roles);
+        map.put("state", "success");
+        return map;
     }
-    @PostMapping("/home")
-    public ResponseEntity<Map<String,Object>> signinPost(@RequestBody JSONObject request, HttpSession session){
+
+    @PostMapping("/regist")
+    public Map<String,Object> regist (@RequestBody JSONObject request, HttpSession session){
         Map<String, Object> map = new HashMap<String, Object>();
-        String name = request.get("name").toString();
-        User userDB = userMapper.loadByUserName(name);
+        JSONObject data = JSON.parseObject(request.get("data").toString());
+        String username = data.get("name").toString();
+        String pwd = data.get("pwd").toString();
+        String role = data.get("role").toString();
+
+        int rslt = shiroService.regist(username, role, role);
+        if(rslt == 0) {
+            map.put("state", "success");
+        } else {
+            map.put("state", "err");
+        }
+        return map;
+    }
+
+    @PostMapping("/home")
+    public Map<String,Object> login (@RequestBody JSONObject request, HttpSession session){
+        Map<String, Object> map = new HashMap<String, Object>();
+        JSONObject data = JSON.parseObject(request.get("data").toString());
+        String name = data.get("name").toString();
+        String serverSession = name + "," + System.currentTimeMillis();
+
+        ShiroUser userDB = shiroUserMapper.loadByUserName(name);
         if(userDB != null){
-//            String pwdDB = DigestUtils.md5DigestAsHex(userDB.getPwd().getBytes());
             String pwdDB = userDB.getPwd();
-//            System.out.println("user.getPwd() " + user.getPwd());
-//            System.out.println("pwdDB " + pwdDB);
             if(pwdDB.equals(request.get("pwd").toString())){
                 System.out.println(name + " 密码正确登录成功");
-                // 写入 session
-                session.setAttribute("name", name);
-//                // 打印 cookie
-//                Cookie[] cookies = request.getCookies();
-//                if (cookies != null && cookies.length > 0) {
-//                    for (Cookie cookie : cookies) {
-//                        System.out.println(cookie.getName() + " : " + cookie.getValue());
-//                    }
-//                }
+                session.setAttribute(name, serverSession);
+                User_Roles_Rscs user_roles_rscs = shiroService.userDetail(name);
+
+                map.put("state", "success");
+                map.put("data", user_roles_rscs);
+                map.put("session", serverSession);
             } else {
-//                System.out.println("密码错误");
-                map.put("err", "Wrong pwd!");
-                return new ResponseEntity<Map<String,Object>>(map, HttpStatus.BAD_REQUEST);
+                map.put("state", "err");
             }
         } else {
             System.out.println(name + " 不存在");
-            map.put("err", "Name not exists!");
-            return new ResponseEntity<Map<String,Object>>(map, HttpStatus.BAD_REQUEST);
+            map.put("state", "err");
         }
-        map.put("success", "Login successful!");
-        return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+        return map;
     }
-    @RequestMapping("/signout")
-    public ResponseEntity<Map<String,Object>> signout(HttpSession session){
+
+    @GetMapping("/logout")
+    public Map<String,Object> signout(@RequestBody JSONObject request, HttpSession session){
         Map<String, Object> map = new HashMap<String, Object>();
-        // 取出 session 中的 name
-        Object name = session.getAttribute("name");
-        System.out.println("注销！");
-        session.removeAttribute("name");
-        map.put("success", "Logged out!");
-        return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+        String clientsession = request.get("session").toString();
+        String name = clientsession.split(",")[0];
+        if(session.getAttribute(name) != null){
+            System.out.println(name + " 注销");
+            session.removeAttribute(name);
+
+            map.put("state", "success");
+        } else{
+            map.put("state", "err");
+        }
+        return map;
     }
 }

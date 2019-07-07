@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinbang.mapper.ShiroRoleMapper">
+    <select id="getRoleByRid" resultType="java.lang.String">
+        select role from shiro_role where rid=#{rid};
+    </select>
+    <select id="loadByRid" resultType="com.jinbang.model.ShiroRole">
+        select * from shiro_role where rid=#{rid};
+    </select>
+    <select id="getall" resultType="java.lang.String">
+        select distinct role from shiro_role;
+    </select>
+    <select id="getRidByRole" resultType="java.lang.Integer">
+        select rid from shiro_role where role=#{role};
+    </select>
+</mapper>

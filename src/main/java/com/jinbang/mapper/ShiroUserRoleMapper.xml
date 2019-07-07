@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinbang.mapper.ShiroUserRoleMapper">
+    <select id="getall" resultType="com.jinbang.model.ShiroUserRole">
+        select * from shiro_user_role;
+    </select>
+    <select id="loadRidsByUid" resultType="java.lang.Integer">
+        select rid from shiro_user_role where uid=#{uid};
+    </select>
+    <select id="loadUidsByRid" resultType="java.lang.Integer">
+        select uid from shiro_user_role where rid=#{rid};
+    </select>
+    <insert id="createUser">
+        insert into shiro_user_role (uid, rid) values(#{uid}, #{rid});
+    </insert>
+</mapper>

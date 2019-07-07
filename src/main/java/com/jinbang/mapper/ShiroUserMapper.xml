@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinbang.mapper.ShiroUserMapper">
+    <insert id="userReg" parameterType="com.jinbang.model.ShiroUser">
+      insert into shiro_user(uid, name, pwd) values(#{uid}, #{name}, #{pwd});
+    </insert>
+    <update id="updateUserById" parameterType="com.jinbang.model.ShiroUser">
+        update shiro_user set name=#{name}, pwd=#{pwd} where uid=#{uid};
+    </update>
+    <delete id="deleteUserById">
+        delete from shiro_user where uid=#{uid};
+    </delete>
+    <select id="loadByUserName" resultType="com.jinbang.model.ShiroUser">
+        select * from `shiro_user` where `name`=#{name};
+    </select>
+    <select id="getUserById" resultType="com.jinbang.model.ShiroUser">
+        select * from shiro_user where uid=#{uid};
+    </select>
+    <select id="getAll" resultType="com.jinbang.model.ShiroUser">
+        select * from shiro_user;
+    </select>
+    <select id="getNames" resultType="java.lang.String">
+        select distinct name from shiro_user order by convert(name using gbk) asc;
+    </select>
+    <select id="maxUid" resultType="java.lang.Integer">
+        select ifnull(max(uid), -1) from shiro_user;
+    </select>
+    <select id="getUidByName" resultType="java.lang.Integer">
+        select uid from shiro_user where name=#{name};
+    </select>
+    <select id="getPwdByName" resultType="java.lang.String">
+        select pwd from shiro_user where name=#{name};
+    </select>
+</mapper>

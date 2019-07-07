@@ -6,7 +6,7 @@ import java.util.concurrent.RecursiveTask;
 public class Item_Asr_Usr_IK_Kp {
     private Item item;
     private Answer answer;
-    private User user;
+    private ShiroUser user;
     private List<Item_kp> item_kps;
     private List<Knowledgepoint> knowledgepoints;
     public String kPPath;
@@ -17,7 +17,7 @@ public class Item_Asr_Usr_IK_Kp {
     public void setAnswer(Answer answer){
         this.answer = answer;
     }
-    public void setUser(User user){
+    public void setUser(ShiroUser user){
         this.user = user;
     }
     public void setItem_kps(List<Item_kp> item_kps){
@@ -35,7 +35,7 @@ public class Item_Asr_Usr_IK_Kp {
     public Answer getAnswer(){
         return answer;
     }
-    public User getUser(){
+    public ShiroUser getUser(){
         return user;
     }
     public List<Item_kp> getItem_kps(){
