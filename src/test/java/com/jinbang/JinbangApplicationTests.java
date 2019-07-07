@@ -12,6 +12,7 @@ import com.jinbang.model.Knowledgepoint;
 import com.jinbang.service.ItemService;
 import com.jinbang.service.KPPathService;
 import com.jinbang.service.PaperService;
+import com.jinbang.service.ShiroService;
 import com.mysql.cj.xdevapi.JsonArray;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,14 +33,11 @@ public class JinbangApplicationTests {
     }
 
     @Autowired
-    PaperService paperService;
+    ShiroService shiroService;
 
     @Test
-    public void createEmptyPaper(){
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("pid", 5);
-        jsonObject.put("title", "shangda");
-        jsonObject.put("name", "翠花");
-        paperService.createEmptyPaper(jsonObject);
+    public void test(){
+        Set<String> rscs = shiroService.getRscsByName("白老板");
+        System.out.println(rscs.toString());
     }
 }

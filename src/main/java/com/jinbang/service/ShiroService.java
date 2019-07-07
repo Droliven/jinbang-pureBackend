@@ -45,7 +45,7 @@ public class ShiroService {
         for (Integer rid : roleids) {
             roles.add(shiroRoleMapper.getRoleByRid(rid));
         }
-        return new HashSet<>(roles);
+        return roles;
     }
     public Set<String> getRscsByRole(String role) {
         Set<String> rscs = new HashSet<>();
@@ -53,7 +53,7 @@ public class ShiroService {
         int rid = shiroRoleMapper.getRidByRole(role);
         rscids = shiroRoleRscMapper.loadRscidByRid(rid);
         for (Integer rscid : rscids) {
-            rscs.add(shiroResourceMapper.getResourceByRscid(rid));
+            rscs.add(shiroResourceMapper.getResourceByRscid(rscid));
         }
         return rscs;
     }
@@ -81,7 +81,7 @@ public class ShiroService {
     public Integer regist(String name, String pwd, String role) {
         // 返回值为 0 成功，为 -1 失败
         Set<String> allnames = new HashSet<>(shiroUserMapper.getNames());
-        if(allnames.contains(name)) {
+        if(!allnames.contains(name)) {
             int uid = shiroUserMapper.maxUid() + 1;
             ShiroUser shiroUser = new ShiroUser();
             shiroUser.setUid(uid);

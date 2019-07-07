@@ -36,6 +36,7 @@ public class PaperController {
             map.put("session", serverSession);
         } else {
             map.put("state", "err");
+            map.put("msg", "未登录");
         }
         return map;
     }
@@ -56,11 +57,12 @@ public class PaperController {
             map.put("session", serverSession);
         } else {
             map.put("state", "err");
+            map.put("msg", "未登录");
         }
         return map;
     }
 
-    @RequestMapping("/getAllPaperDetail")
+    @PostMapping("/getAllPaperDetail")
     public Map<String, Object> getAllPaperDetail(@RequestBody JSONObject request, HttpSession session){
         System.out.println("查看试卷");
         Map<String, Object> map = new HashMap<String, Object>();
@@ -78,6 +80,7 @@ public class PaperController {
             map.put("session", serverSession);
         } else {
             map.put("state", "err");
+            map.put("msg", "未登录");
         }
         return map;
     }

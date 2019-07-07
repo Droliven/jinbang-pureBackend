@@ -30,7 +30,7 @@ public class ItemController {
     @Autowired
     KPPathService kpPathService;
 
-    @GetMapping("/itemradio")
+    @PostMapping("/itemradio")
     public Map<String,Object> itemradio(@RequestBody JSONObject request, HttpSession session){
         Map<String, Object> map = new HashMap<String, Object>();
         String clientsession = request.get("session").toString();
@@ -47,6 +47,7 @@ public class ItemController {
             map.put("session", serverSession);
         } else {
             map.put("state", "err");
+            map.put("msg", "未登录");
         }
         return map;
     }
@@ -92,11 +93,12 @@ public class ItemController {
             map.put("session", serverSession);
         } else {
             map.put("state", "err");
+            map.put("msg", "未登录");
         }
         return map;
     }
 
-    @DeleteMapping ("/itemDeleteByIids")
+    @PostMapping ("/itemDeleteByIids")
     public Map<String,Object> itemDeleteByIids(@RequestBody JSONObject request, HttpSession session){
         Map<String, Object> map = new HashMap<String, Object>();
         JSONObject data = JSON.parseObject(request.get("data").toString());
@@ -114,11 +116,12 @@ public class ItemController {
             map.put("session", serverSession);
         } else {
             map.put("state", "err");
+            map.put("msg", "未登录");
         }
         return map;
     }
 
-    @RequestMapping("/getRestBranch")
+    @PostMapping("/getRestBranch")
     public Map<String,Object> getRestBranch(@RequestBody JSONObject request, HttpSession session){
         Map<String, Object> map = new HashMap<String, Object>();
         JSONObject data = JSON.parseObject(request.get("data").toString());
@@ -136,6 +139,7 @@ public class ItemController {
             map.put("session", serverSession);
         } else {
             map.put("state", "err");
+            map.put("msg", "未登录");
         }
         return map;
     }
@@ -158,6 +162,7 @@ public class ItemController {
             map.put("session", serverSession);
         } else {
             map.put("state", "err");
+            map.put("msg", "未登录");
         }
         return map;
     }
@@ -178,6 +183,7 @@ public class ItemController {
             map.put("session", serverSession);
         } else {
             map.put("state", "err");
+            map.put("msg", "未登录");
         }
         return map;
     }
@@ -198,6 +204,7 @@ public class ItemController {
             map.put("session", serverSession);
         } else {
             map.put("state", "err");
+            map.put("msg", "未登录");
         }
         return map;
     }
