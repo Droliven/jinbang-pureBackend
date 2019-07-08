@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : mysql-pc
+ Source Server         : mysql-remote
  Source Server Type    : MySQL
- Source Server Version : 80015
- Source Host           : localhost:3306
+ Source Server Version : 80016
+ Source Host           : 39.108.76.111:3306
  Source Schema         : shirojinbang
 
  Target Server Type    : MySQL
- Target Server Version : 80015
+ Target Server Version : 80016
  File Encoding         : 65001
 
- Date: 08/07/2019 19:15:44
+ Date: 08/07/2019 22:47:58
 */
 
 SET NAMES utf8mb4;
@@ -169,7 +169,7 @@ CREATE TABLE `paper`  (
 -- Records of paper
 -- ----------------------------
 BEGIN;
-INSERT INTO `paper` VALUES (1, '英语翻译测试', 3, 12, 12), (2, '试卷5', 1, -1, -1);
+INSERT INTO `paper` VALUES (1, '英语翻译测试', 3, 12, 12);
 COMMIT;
 
 -- ----------------------------
@@ -243,7 +243,7 @@ CREATE TABLE `shiro_user`  (
 -- Records of shiro_user
 -- ----------------------------
 BEGIN;
-INSERT INTO `shiro_user` VALUES (1, '白老板', '123456', 'wxKYXuTPST5SG0jMQzVPsg==', 'J/ms7qTJtqmysekuY8/v1TAS+VKqXdH5sB7ulXZOWho='), (2, '白录入', '123456', 'wxKYXuTPST5SG0jMQzVPsg==', 'J/ms7qTJtqmysekuY8/v1TAS+VKqXdH5sB7ulXZOWho='), (3, '白老师', '123456', 'wxKYXuTPST5SG0jMQzVPsg==', 'J/ms7qTJtqmysekuY8/v1TAS+VKqXdH5sB7ulXZOWho='), (4, '校网', '123', NULL, NULL), (5, '小狗', '123456', NULL, NULL);
+INSERT INTO `shiro_user` VALUES (1, '白老板', '123456', 'wxKYXuTPST5SG0jMQzVPsg==', 'J/ms7qTJtqmysekuY8/v1TAS+VKqXdH5sB7ulXZOWho='), (2, '白录入', '123456', 'wxKYXuTPST5SG0jMQzVPsg==', 'J/ms7qTJtqmysekuY8/v1TAS+VKqXdH5sB7ulXZOWho='), (3, '白老师', '123456', 'wxKYXuTPST5SG0jMQzVPsg==', 'J/ms7qTJtqmysekuY8/v1TAS+VKqXdH5sB7ulXZOWho=');
 COMMIT;
 
 -- ----------------------------
@@ -263,7 +263,7 @@ CREATE TABLE `shiro_user_role`  (
 -- Records of shiro_user_role
 -- ----------------------------
 BEGIN;
-INSERT INTO `shiro_user_role` VALUES (1, 1), (2, 2), (3, 3), (4, 3), (5, 3);
+INSERT INTO `shiro_user_role` VALUES (1, 1), (2, 2), (3, 3);
 COMMIT;
 
 -- ----------------------------

@@ -14,7 +14,7 @@
         update buildpaper set itemorder=#{itemorder}, score=#{score}, timemin=#{timemin} where pid=#{pid} and iid=#{iid};
     </update>
     <insert id="addBuildpaper" parameterType="com.jinbang.model.Buildpaper">
-        insert into buildpaper values(#{pid}, #{iid}, #{itemorder}, #{score}, #{timemin});
+        insert into buildpaper(pid, iid, itemorder, score, timemin) values(#{pid}, #{iid}, #{itemorder}, #{score}, #{timemin});
     </insert>
     <select id="getBpByPid" resultType="com.jinbang.model.Buildpaper">
         select * from buildpaper where pid=#{pid};

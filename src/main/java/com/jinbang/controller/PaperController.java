@@ -74,13 +74,9 @@ public class PaperController {
         if(session.getAttribute(name) != null){
             if(rscs.contains("buildPaper")) {
                 // 业务代码
-                paperService.buildPaper(data);
                 System.out.println("buildPaper");
-
-                String serverSession = name + "," + System.currentTimeMillis();
-                session.setAttribute(name, serverSession);
+                paperService.buildPaper(realdata);
                 map.put("state", "success");
-                map.put("session", serverSession);
             } else {
                 map.put("state", "err");
                 map.put("msg", "没有权限");
@@ -89,7 +85,9 @@ public class PaperController {
             map.put("state", "err");
             map.put("msg", "未登录");
         }
-        System.out.println(map.toString());
+        String serverSession = name + "," + System.currentTimeMillis();
+        session.setAttribute(name, serverSession);
+        map.put("session", serverSession);
         return new ResponseEntity<JSONObject>(map, HttpStatus.OK);
     }
 

@@ -43,7 +43,8 @@ public class PaperService {
 
 
     public void buildPaper(JSONObject jsonParam){
-        int pid = (Integer) jsonParam.get("pid");
+        String title = jsonParam.getString("title");
+        int pid = paperMapper.getPidByTitle(title);
         List<Map<String, Object>> items = JSON.parseObject(jsonParam.get("items").toString(), new TypeReference<List<Map<String,Object>>>(){});
         for (Map<String, Object> item: items) {
             Buildpaper buildpaper = new Buildpaper();
@@ -52,7 +53,7 @@ public class PaperService {
             buildpaper.setItemorder((Integer) item.get("itemorder"));
             buildpaper.setScore((Integer) item.get("score"));
             buildpaper.setTimemin((Integer) item.get("timemin"));
-            int rslt = buildpaperMapper.addBuildpaper(buildpaper);
+            buildpaperMapper.addBuildpaper(buildpaper);
         }
     }
 
