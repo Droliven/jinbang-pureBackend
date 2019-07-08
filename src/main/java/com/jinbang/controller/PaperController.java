@@ -5,6 +5,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jinbang.service.PaperService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,8 +24,8 @@ public class PaperController {
     PaperService paperService;
 
     @PostMapping("/createEmptyPaper")
-    public Map<String, Object> createEmptyPaper(@RequestBody JSONObject request, HttpSession session){
-        Map<String, Object> map = new HashMap<String, Object>();
+    public ResponseEntity<JSONObject> createEmptyPaper(@RequestBody JSONObject request, HttpSession session){
+        JSONObject map = new JSONObject();
 
         String clientsession = request.get("session").toString();
 
@@ -35,7 +37,7 @@ public class PaperController {
 
         String name = clientsession.split(",")[0];
         if(session.getAttribute(name) != null){
-            if(rscs.contains("itemradio")) {
+            if(rscs.contains("createEmptyPaper")) {
                 // 业务代码
                 int pid = paperService.createEmptyPaper(realdata);
                 System.out.println("createEmptyPaper");
@@ -53,12 +55,12 @@ public class PaperController {
             map.put("state", "err");
             map.put("msg", "未登录");
         }
-        return map;
+        return new ResponseEntity<JSONObject>(map, HttpStatus.OK);
     }
 
     @PostMapping("/buildPaper")
-    public Map<String, Object> buildPaper(@RequestBody JSONObject request, HttpSession session){
-        Map<String, Object> map = new HashMap<String, Object>();
+    public ResponseEntity<JSONObject> buildPaper(@RequestBody JSONObject request, HttpSession session){
+        JSONObject map = new JSONObject();
 
         String clientsession = request.get("session").toString();
 
@@ -70,7 +72,7 @@ public class PaperController {
 
         String name = clientsession.split(",")[0];
         if(session.getAttribute(name) != null){
-            if(rscs.contains("itemradio")) {
+            if(rscs.contains("buildPaper")) {
                 // 业务代码
                 paperService.buildPaper(data);
                 System.out.println("buildPaper");
@@ -87,12 +89,13 @@ public class PaperController {
             map.put("state", "err");
             map.put("msg", "未登录");
         }
-        return map;
+        System.out.println(map.toString());
+        return new ResponseEntity<JSONObject>(map, HttpStatus.OK);
     }
 
     @PostMapping("/getAllPaperDetail")
-    public Map<String, Object> getAllPaperDetail(@RequestBody JSONObject request, HttpSession session){
-        Map<String, Object> map = new HashMap<String, Object>();
+    public ResponseEntity<JSONObject> getAllPaperDetail(@RequestBody JSONObject request, HttpSession session){
+        JSONObject map = new JSONObject();
 
         String clientsession = request.get("session").toString();
 
@@ -104,7 +107,7 @@ public class PaperController {
 
         String name = clientsession.split(",")[0];
         if(session.getAttribute(name) != null){
-            if(rscs.contains("itemradio")) {
+            if(rscs.contains("getAllPaperDetail")) {
                 // 业务代码
                 System.out.println("getAllPaperDetail");
                 JSONArray allPaperAndBuildpapers = paperService.getAllPaperDetail();
@@ -122,7 +125,7 @@ public class PaperController {
             map.put("state", "err");
             map.put("msg", "未登录");
         }
-        return map;
+//        System.out.println(map.toString());
+        return new ResponseEntity<JSONObject>(map, HttpStatus.OK);
     }
-
 }

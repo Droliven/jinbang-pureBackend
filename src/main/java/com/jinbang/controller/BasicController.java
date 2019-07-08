@@ -9,6 +9,8 @@ import com.jinbang.model.User_Roles_Rscs;
 import com.jinbang.service.ItemService;
 import com.jinbang.service.ShiroService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
@@ -30,18 +32,18 @@ public class BasicController {
     ShiroRoleMapper shiroRoleMapper;
 
     @GetMapping("/registradio")
-    public Map<String,Object> regist (){
-        Map<String, Object> map = new HashMap<String, Object>();
+    public ResponseEntity<JSONObject> regist (){
+        JSONObject map = new JSONObject();
 
         Set<String> roles = new HashSet<String>(shiroRoleMapper.getall());
         map.put("data", roles);
         map.put("state", "success");
-        return map;
+        return new ResponseEntity<JSONObject>(map, HttpStatus.OK);
     }
 
     @PostMapping("/regist")
-    public Map<String,Object> regist (@RequestBody JSONObject request, HttpSession session){
-        Map<String, Object> map = new HashMap<String, Object>();
+    public ResponseEntity<JSONObject> regist (@RequestBody JSONObject request, HttpSession session){
+        JSONObject map = new JSONObject();
         JSONObject data = JSON.parseObject(request.get("data").toString());
         String username = data.get("name").toString();
         String pwd = data.get("pwd").toString();
@@ -54,12 +56,12 @@ public class BasicController {
             map.put("state", "err");
             map.put("msg", "用户名已存在");
         }
-        return map;
+        return new ResponseEntity<JSONObject>(map, HttpStatus.OK);
     }
 
     @PostMapping("/home")
-    public Map<String,Object> login (@RequestBody JSONObject request, HttpSession session){
-        Map<String, Object> map = new HashMap<String, Object>();
+    public ResponseEntity<JSONObject> login (@RequestBody JSONObject request, HttpSession session){
+        JSONObject map = new JSONObject();
         JSONObject data = JSON.parseObject(request.get("data").toString());
         String name = data.get("name").toString();
         String serverSession = name + "," + System.currentTimeMillis();
@@ -84,12 +86,12 @@ public class BasicController {
             map.put("state", "err");
             map.put("msg", "用户不存在");
         }
-        return map;
+        return new ResponseEntity<JSONObject>(map, HttpStatus.OK);
     }
 
     @PostMapping("/logout")
-    public Map<String,Object> logout(@RequestBody JSONObject request, HttpSession session){
-        Map<String, Object> map = new HashMap<String, Object>();
+    public ResponseEntity<JSONObject> logout(@RequestBody JSONObject request, HttpSession session){
+        JSONObject map = new JSONObject();
         JSONObject data = JSON.parseObject(request.get("data").toString());
         String clientsession = data.get("session").toString();
         String name = clientsession.split(",")[0];
@@ -101,6 +103,6 @@ public class BasicController {
             map.put("state", "err");
             map.put("msg", "用户未登录");
         }
-        return map;
+        return new ResponseEntity<JSONObject>(map, HttpStatus.OK);
     }
 }

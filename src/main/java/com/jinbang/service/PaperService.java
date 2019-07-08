@@ -27,14 +27,6 @@ public class PaperService {
     @Autowired
     AnswerMapper answerMapper;
 
-    /**
-     *
-     * @param jsonParam: {
-     *                 title: "上大数据库原理2期末",
-     *                 name: "翠花"
-     * }
-     * @return
-     */
     public int createEmptyPaper(JSONObject jsonParam){
         System.out.println("jsonParam: " + jsonParam.toString());
         String title = jsonParam.get("title").toString();
@@ -49,22 +41,7 @@ public class PaperService {
         return maxPid+1;
     }
 
-    /**
-     * @param jsonParam: {
-     *                 pid: 1
-     *                 items: [{
-     *                     iid: 1,
-     *                     itemorder: 1,
-     *                     score: 10,
-     *                     timemin: 5
-     *                 }, {
-     *                     iid: 1,
-     *                     itemorder: 1,
-     *                     score: 10,
-     *                     timemin: 5
-     *                 }]
-     * }
-     */
+
     public void buildPaper(JSONObject jsonParam){
         int pid = (Integer) jsonParam.get("pid");
         List<Map<String, Object>> items = JSON.parseObject(jsonParam.get("items").toString(), new TypeReference<List<Map<String,Object>>>(){});
@@ -78,41 +55,6 @@ public class PaperService {
             int rslt = buildpaperMapper.addBuildpaper(buildpaper);
         }
     }
-
-    /**
-     * @return [{
-     *     pid: 1,
-     *     title: "shangda",
-     *     组卷员: "翠花",
-     *     sumscore: 100,
-     *     sumtimemin: 150,
-     *     buildpapers: [{
-     *          pid: 1,
-     *          iid: 5,
-     *          itemorder: 1
-     *          score: 10,
-     *          timemin: 10,
-     *          item: {
-     *
-     *          },
-     *          answer: {
-     *
-     *          }
-     *     }, {
-    *           pid: 1,
-     *          iid: 5,
-     *          itemorder: 1
-     *          score: 10,
-     *          timemin: 10,
-     *          item: {
-     *
-     *          },
-     *          answer: {
-     *
-     *          }
-     *     }]
-     * }]
-     */
 
     public JSONArray getAllPaperDetail(){
         JSONArray allPaperAndBuildpapers = new JSONArray();

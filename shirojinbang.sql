@@ -11,7 +11,7 @@
  Target Server Version : 80015
  File Encoding         : 65001
 
- Date: 05/07/2019 20:18:21
+ Date: 08/07/2019 19:15:44
 */
 
 SET NAMES utf8mb4;
@@ -169,7 +169,7 @@ CREATE TABLE `paper`  (
 -- Records of paper
 -- ----------------------------
 BEGIN;
-INSERT INTO `paper` VALUES (1, '英语翻译测试', 3, 12, 12);
+INSERT INTO `paper` VALUES (1, '英语翻译测试', 3, 12, 12), (2, '试卷5', 1, -1, -1);
 COMMIT;
 
 -- ----------------------------
@@ -186,7 +186,7 @@ CREATE TABLE `shiro_resource`  (
 -- Records of shiro_resource
 -- ----------------------------
 BEGIN;
-INSERT INTO `shiro_resource` VALUES (1, 'index'), (2, 'login'), (3, 'home'), (4, '查看搜索资源'), (5, '导出资源'), (6, '录入编辑资源'), (7, '删除资源'), (8, '管理其他用户'), (9, '管理自身用户信息');
+INSERT INTO `shiro_resource` VALUES (1, 'login'), (2, 'logout'), (3, 'getAllPaperDetail'), (4, 'itemradio'), (5, 'itemchoose'), (6, 'getRestBranch'), (7, 'itemDeleteByIids'), (8, 'addKpByPath'), (9, 'editItemFully'), (10, 'addItemFully'), (11, 'createEmptyPaper'), (12, 'buildPaper');
 COMMIT;
 
 -- ----------------------------
@@ -223,7 +223,7 @@ CREATE TABLE `shiro_role_rsc`  (
 -- Records of shiro_role_rsc
 -- ----------------------------
 BEGIN;
-INSERT INTO `shiro_role_rsc` VALUES (1, 1), (2, 1), (3, 1), (1, 2), (2, 2), (3, 2), (1, 3), (2, 3), (3, 3), (1, 4), (2, 4), (3, 4), (1, 5), (2, 5), (3, 5), (1, 6), (2, 6), (1, 7), (1, 8), (1, 9), (2, 9), (3, 9);
+INSERT INTO `shiro_role_rsc` VALUES (1, 1), (2, 1), (3, 1), (1, 2), (2, 2), (3, 2), (1, 3), (2, 3), (3, 3), (1, 4), (2, 4), (3, 4), (1, 5), (2, 5), (3, 5), (1, 6), (2, 6), (3, 6), (1, 7), (1, 8), (2, 8), (1, 9), (2, 9), (1, 10), (2, 10), (1, 11), (2, 11), (1, 12), (2, 12);
 COMMIT;
 
 -- ----------------------------
@@ -234,14 +234,16 @@ CREATE TABLE `shiro_user`  (
   `uid` int(11) NOT NULL,
   `name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   `pwd` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `salt` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '加密盐值',
+  `shar256` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   PRIMARY KEY (`uid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of shiro_user
 -- ----------------------------
 BEGIN;
-INSERT INTO `shiro_user` VALUES (1, '白老板', 'e10adc3949ba59abbe56e057f20f883e'), (2, '白录入', 'e10adc3949ba59abbe56e057f20f883e'), (3, '白老师', 'e10adc3949ba59abbe56e057f20f883e');
+INSERT INTO `shiro_user` VALUES (1, '白老板', '123456', 'wxKYXuTPST5SG0jMQzVPsg==', 'J/ms7qTJtqmysekuY8/v1TAS+VKqXdH5sB7ulXZOWho='), (2, '白录入', '123456', 'wxKYXuTPST5SG0jMQzVPsg==', 'J/ms7qTJtqmysekuY8/v1TAS+VKqXdH5sB7ulXZOWho='), (3, '白老师', '123456', 'wxKYXuTPST5SG0jMQzVPsg==', 'J/ms7qTJtqmysekuY8/v1TAS+VKqXdH5sB7ulXZOWho='), (4, '校网', '123', NULL, NULL), (5, '小狗', '123456', NULL, NULL);
 COMMIT;
 
 -- ----------------------------
@@ -261,7 +263,7 @@ CREATE TABLE `shiro_user_role`  (
 -- Records of shiro_user_role
 -- ----------------------------
 BEGIN;
-INSERT INTO `shiro_user_role` VALUES (1, 1), (2, 2), (3, 3);
+INSERT INTO `shiro_user_role` VALUES (1, 1), (2, 2), (3, 3), (4, 3), (5, 3);
 COMMIT;
 
 -- ----------------------------

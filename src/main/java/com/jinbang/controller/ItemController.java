@@ -10,6 +10,8 @@ import com.jinbang.model.Item_Asr_Usr_IK_Kp;
 import com.jinbang.service.ItemService;
 import com.jinbang.service.KPPathService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
@@ -29,8 +31,8 @@ public class ItemController {
     KPPathService kpPathService;
 
     @PostMapping("/itemradio")
-    public Map<String,Object> itemradio(@RequestBody JSONObject request, HttpSession session){
-        Map<String, Object> map = new HashMap<String, Object>();
+    public ResponseEntity<JSONObject> itemradio(@RequestBody JSONObject request, HttpSession session){
+        JSONObject map = new JSONObject();
 
         String clientsession = request.get("session").toString();
 
@@ -58,12 +60,12 @@ public class ItemController {
             map.put("state", "err");
             map.put("msg", "未登录");
         }
-        return map;
+        return new ResponseEntity<JSONObject>(map, HttpStatus.OK);
     }
 
     @PostMapping("/itemchoose")
-    public Map<String,Object> itemchoose(@RequestBody JSONObject request, HttpSession session){
-        Map<String, Object> map = new HashMap<String, Object>();
+    public ResponseEntity<JSONObject> itemchoose(@RequestBody JSONObject request, HttpSession session){
+        JSONObject map = new JSONObject();
 
         String clientsession = request.get("session").toString();
 
@@ -118,12 +120,12 @@ public class ItemController {
             map.put("state", "err");
             map.put("msg", "未登录");
         }
-        return map;
+        return new ResponseEntity<JSONObject>(map, HttpStatus.OK);
     }
 
     @PostMapping ("/itemDeleteByIids")
-    public Map<String,Object> itemDeleteByIids(@RequestBody JSONObject request, HttpSession session){
-        Map<String, Object> map = new HashMap<String, Object>();
+    public ResponseEntity<JSONObject> itemDeleteByIids(@RequestBody JSONObject request, HttpSession session){
+        JSONObject map = new JSONObject();
 
         String clientsession = request.get("session").toString();
 
@@ -153,12 +155,12 @@ public class ItemController {
             map.put("state", "err");
             map.put("msg", "未登录");
         }
-        return map;
+        return new ResponseEntity<JSONObject>(map, HttpStatus.OK);
     }
 
     @PostMapping("/getRestBranch")
-    public Map<String,Object> getRestBranch(@RequestBody JSONObject request, HttpSession session){
-        Map<String, Object> map = new HashMap<String, Object>();
+    public ResponseEntity<JSONObject> getRestBranch(@RequestBody JSONObject request, HttpSession session){
+        JSONObject map = new JSONObject();
 
         String clientsession = request.get("session").toString();
 
@@ -190,12 +192,12 @@ public class ItemController {
             map.put("state", "err");
             map.put("msg", "未登录");
         }
-        return map;
+        return new ResponseEntity<JSONObject>(map, HttpStatus.OK);
     }
 
     @PostMapping("/addKpByPath")
-    public Map<String,Object> addKpByPath(@RequestBody JSONObject request, HttpSession session) {
-        Map<String, Object> map = new HashMap<String, Object>();
+    public ResponseEntity<JSONObject> addKpByPath(@RequestBody JSONObject request, HttpSession session) {
+        JSONObject map = new JSONObject();
 
         String clientsession = request.get("session").toString();
 
@@ -226,12 +228,12 @@ public class ItemController {
             map.put("state", "err");
             map.put("msg", "未登录");
         }
-        return map;
+        return new ResponseEntity<JSONObject>(map, HttpStatus.OK);
     }
 
     @PostMapping ("/editItemFully")
-    public Map<String,Object> editItemFully(@RequestBody JSONObject request, HttpSession session){
-        Map<String, Object> map = new HashMap<String, Object>();
+    public ResponseEntity<JSONObject> editItemFully(@RequestBody JSONObject request, HttpSession session){
+        JSONObject map = new JSONObject();
 
         String clientsession = request.get("session").toString();
 
@@ -245,7 +247,7 @@ public class ItemController {
         if(session.getAttribute(name) != null){
             if(rscs.contains("editItemFully")) {
                 // 业务代码
-                itemService.editItemFully(data);
+                itemService.editItemFully(realdata);
                 System.out.println("editItemFully");
 
                 String serverSession = name + "," + System.currentTimeMillis();
@@ -260,12 +262,12 @@ public class ItemController {
             map.put("state", "err");
             map.put("msg", "未登录");
         }
-        return map;
+        return new ResponseEntity<JSONObject>(map, HttpStatus.OK);
     }
 
     @PostMapping("/addItemFully")
-    public Map<String,Object> addItemFully(@RequestBody JSONObject request, HttpSession session) {
-        Map<String, Object> map = new HashMap<String, Object>();
+    public ResponseEntity<JSONObject> addItemFully(@RequestBody JSONObject request, HttpSession session) {
+        JSONObject map = new JSONObject();
 
         String clientsession = request.get("session").toString();
 
@@ -280,7 +282,7 @@ public class ItemController {
             if(rscs.contains("addItemFully")) {
                 // 业务代码
                 System.out.println("addItemFully");
-                itemService.addItemFully(data);
+                itemService.addItemFully(realdata);
 
                 String serverSession = name + "," + System.currentTimeMillis();
                 session.setAttribute(name, serverSession);
@@ -294,6 +296,6 @@ public class ItemController {
             map.put("state", "err");
             map.put("msg", "未登录");
         }
-        return map;
+        return new ResponseEntity<JSONObject>(map, HttpStatus.OK);
     }
 }
