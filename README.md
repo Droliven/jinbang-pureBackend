@@ -1,5 +1,5 @@
-# 金榜试卷管理系统（纯后端版）
-**上大数据库原理2（郑宇老师班级）课程项目 2019.05.12 Joliven**
+# 金榜试卷管理系统
+**上大数据库原理2（郑宇老师班级）课程项目 2019.05.12 Droliven**
 
 ## 项目描述
 
@@ -27,7 +27,17 @@
 
 ## 项目实施
 
-本项目是基于 `Spring Boot` 集成 `Mybatis`, `Druid` 的试卷管理系统。数据库文件在根目录下 `jinbang.sql`.、
+本项目后端是基于 `Spring Boot` 集成 `Mybatis`, `Druid`, `Shiro` 的试卷管理系统。数据库文件在根目录下 `jinbang.sql`. 前端为原生。
 
 本项目与之前不同在于穿后端，只开发后端 api 并返回 json 数据给前端。
+
+## 运行
+
+### 建立并连接 Mysql 数据库
+
+1. Mysql 建库，并导入数据（库名、数据见 "/src/main/resources/application.properties"）
+2. 修改 "application.properties" 中数据库的用户名、密码
+3. 启动 Spring Boot 项目
+4. 浏览器打开 "localhost:8081/jinbang" （端口号见 "application.properties"），显示 "Whitelabel Error Page"
+5. 访问 "/registradio"，浏览器显示 JSON 数据。（具体路由见 "/src/main/java/com.jinbang/controller/BaseController"）
 
